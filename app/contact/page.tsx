@@ -1,25 +1,10 @@
+import { ContactForm } from '../contact-form'
 
-import ContactPage from "@/components/Contact-Page/contact-page";
-import Header from "@/components/Header/header";
-
-
-
-
-export default function Home() {
+export default function ContactPage() {
   return (
-
-    <main className="h-full w-full">
-      <div className="flex flex-col gap-10">
-        <Header />
-        <ContactPage />
-        
-  
-   
-      
-      </div>
-    </main>
-
-
-  
-  );
+    <div className="container mx-auto py-10">
+      <h1 className="text-3xl font-bold mb-6">Contact Us</h1>
+      <ContactForm />
+    </div>
+  )
 }
