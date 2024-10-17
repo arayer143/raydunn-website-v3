@@ -8,23 +8,21 @@ import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/hooks/use-toast"
 
 export default function ContactSection() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('/api/contact', {
+      const form = e.currentTarget
+      const response = await fetch('https://formspree.io/f/mrbggdlj', {
         method: 'POST',
+        body: new FormData(form),
         headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, email, message }),
+          Accept: 'application/json'
+        }
       })
 
       if (response.ok) {
@@ -32,11 +30,9 @@ export default function ContactSection() {
           title: "Message Sent",
           description: "We've received your message and will get back to you soon!",
         })
-        setName('')
-        setEmail('')
-        setMessage('')
+        form.reset()
       } else {
-        throw new Error('Failed to send message')
+        throw new Error('Form submission failed')
       }
     } catch (error) {
       toast({
@@ -64,8 +60,7 @@ export default function ContactSection() {
               </label>
               <Input
                 id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                name="name"
                 required
                 placeholder="Your name"
               />
@@ -76,9 +71,8 @@ export default function ContactSection() {
               </label>
               <Input
                 id="email"
+                name="email"
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="your@email.com"
               />
@@ -89,8 +83,7 @@ export default function ContactSection() {
               </label>
               <Textarea
                 id="message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                name="message"
                 required
                 placeholder="Your message here..."
                 rows={4}
