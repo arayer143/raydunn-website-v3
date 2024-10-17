@@ -2,8 +2,7 @@
 import Header from "@/components/Header/header";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import ContactSection from "./contact-section";
 import { Code, Globe, Laptop, Rocket, Zap } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -105,7 +104,7 @@ export default function Home() {
                   alt={`Project ${i}`}
                   className="object-cover w-full h-48"
                   height="200"
-                  src={`/placeholder.svg?height=200&width=300`}
+                  src={`/cleanslatelol-whiteBG.jpg`}
                   style={{
                     aspectRatio: "300/200",
                     objectFit: "cover",
@@ -138,7 +137,7 @@ export default function Home() {
                       alt="Client"
                       className="rounded-full"
                       height="40"
-                      src="/placeholder.svg"
+                      src=""
                       style={{
                         aspectRatio: "40/40",
                         objectFit: "cover",
@@ -159,59 +158,18 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section id="contact" className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
-        <div className="container px-4 md:px-6">
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
-            Contact Us
-          </h2>
-          <div className="max-w-2xl mx-auto">
-            <form className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    First Name
-                  </label>
-                  <Input id="first-name" placeholder="John" required />
-                </div>
-                <div>
-                  <label htmlFor="last-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Last Name
-                  </label>
-                  <Input id="last-name" placeholder="Doe" required />
-                </div>
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Email
-                </label>
-                <Input id="email" placeholder="john@example.com" type="email" required />
-              </div>
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Message
-                </label>
-                <Textarea id="message" placeholder="Your message here..." required />
-              </div>
-              <Button type="submit" className="w-full">Send Message</Button>
-            </form>
-          </div>
-        </div>
-      </section>
+     
       <section className="w-full py-12 md:py-24 lg:py-32">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                Ready to Transform Your Online Presence?
-              </h2>
-              <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                Let&apos;s create a website that drives results for your business.
-              </p>
-            </div>
-            <Button size="lg">Get Started Today</Button>
-          </div>
-        </div>
+            <ContactSection />
+
       </section>
+
+
+
+
+
+
+
     </main>
     <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
       <p className="text-xs text-gray-500 dark:text-gray-400">© 2024 Acme Inc. All rights reserved.</p>
