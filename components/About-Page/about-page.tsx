@@ -28,12 +28,12 @@ export default function AboutPage() {
         <h2 className="text-3xl font-semibold">Meet Our Team</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
-            { name: "Alex Johnson", role: "Founder & CEO", image: "/placeholder.svg?height=100&width=100" },
-            { name: "Sam Lee", role: "Lead Developer", image: "/placeholder.svg?height=100&width=100" },
-            { name: "Taylor Swift", role: "UX Designer", image: "/placeholder.svg?height=100&width=100" },
-            { name: "Jordan Patel", role: "Project Manager", image: "/placeholder.svg?height=100&width=100" },
-            { name: "Casey Morgan", role: "Full-Stack Developer", image: "/placeholder.svg?height=100&width=100" },
-            { name: "Robin Chen", role: "Marketing Specialist", image: "/placeholder.svg?height=100&width=100" },
+            { name: "Alex Johnson", role: "Founder & CEO", image: "" },
+            { name: "Sam Lee", role: "Lead Developer", image: "" },
+            { name: "Taylor Swift", role: "UX Designer", image: "" },
+            { name: "Jordan Patel", role: "Project Manager", image: "" },
+            { name: "Casey Morgan", role: "Full-Stack Developer", image: "" },
+            { name: "Robin Chen", role: "Marketing Specialist", image: "" },
           ].map((member) => (
             <Card key={member.name}>
               <CardContent className="flex flex-col items-center p-6 space-y-4">
