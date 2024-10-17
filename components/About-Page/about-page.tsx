@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
@@ -24,32 +24,7 @@ export default function AboutPage() {
         </p>
       </section>
 
-      <section className="space-y-6">
-        <h2 className="text-3xl font-semibold">Meet Our Team</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            { name: "Alex Johnson", role: "Founder & CEO", image: "" },
-            { name: "Sam Lee", role: "Lead Developer", image: "" },
-            { name: "Taylor Swift", role: "UX Designer", image: "" },
-            { name: "Jordan Patel", role: "Project Manager", image: "" },
-            { name: "Casey Morgan", role: "Full-Stack Developer", image: "" },
-            { name: "Robin Chen", role: "Marketing Specialist", image: "" },
-          ].map((member) => (
-            <Card key={member.name}>
-              <CardContent className="flex flex-col items-center p-6 space-y-4">
-                <Avatar className="w-24 h-24">
-                  <AvatarImage src={member.image} alt={member.name} />
-                  <AvatarFallback>{member.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                </Avatar>
-                <div className="text-center">
-                  <h3 className="font-semibold">{member.name}</h3>
-                  <p className="text-sm text-muted-foreground">{member.role}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
+
 
       <section className="space-y-6">
         <h2 className="text-3xl font-semibold">Our Values</h2>
