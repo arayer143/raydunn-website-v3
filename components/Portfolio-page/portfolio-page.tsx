@@ -10,60 +10,34 @@ export default function PortfolioPage() {
     {
       id: 1,
       title: "E-commerce Platform",
-      description: "A fully responsive e-commerce platform with advanced filtering and search capabilities.",
-      image: "/placeholder.svg?height=400&width=600",
-      category: "Web Application",
-      technologies: ["React", "Node.js", "MongoDB", "Stripe"],
-      link: "https://example-ecommerce.com"
+      description: "Website for Clean Slate Pressure Washing LLC ",
+      image: "/cleanslatelol-whiteBG.jpg",
+      category: "Website",
+      technologies: ["Bootstrap", "HTML", "Saas", "JavaScript", "PHP"],
+      link: "https://cleanslatepressurewashingnola.com/"
     },
     {
       id: 2,
-      title: "Task Management Dashboard",
-      description: "An intuitive task management system with real-time updates and team collaboration features.",
-      image: "/placeholder.svg?height=400&width=600",
-      category: "Web Application",
-      technologies: ["Vue.js", "Firebase", "Tailwind CSS"],
-      link: "https://example-taskmanager.com"
+      title: "Pristin Clean Soft Wash ",
+      description: "Website for Pristine Clean Soft Wash LLC",
+      image: "/pristinecleanlogo.webp",
+      category: "Website",
+      technologies: ["Bootstrap", "HTML", "Saas", "JavaScript", "PHP"],
+      link: "https://pristinecleansoftwash.com/"
     },
     {
       id: 3,
-      title: "Fitness Tracking Mobile App",
-      description: "A cross-platform mobile app for tracking workouts, nutrition, and health metrics.",
-      image: "/placeholder.svg?height=400&width=600",
+      title: "OutKast Industrial Group",
+      description: "Website for OutKast Industrial Group LLC",
+      image: "/outkast-logo.webp",
       category: "Mobile App",
-      technologies: ["React Native", "GraphQL", "AWS"],
+      technologies: ["Bootstrap", "HTML", "Saas", "JavaScript", "PHP"],
       link: "https://example-fitnessapp.com"
     },
-    {
-      id: 4,
-      title: "Corporate Website Redesign",
-      description: "A modern, accessible website redesign for a Fortune 500 company, focusing on user experience and performance.",
-      image: "/placeholder.svg?height=400&width=600",
-      category: "Website",
-      technologies: ["Next.js", "Contentful", "Vercel"],
-      link: "https://example-corporate.com"
-    },
-    {
-      id: 5,
-      title: "AI-Powered Chatbot",
-      description: "An intelligent chatbot for customer support, integrating natural language processing and machine learning.",
-      image: "/placeholder.svg?height=400&width=600",
-      category: "AI & Machine Learning",
-      technologies: ["Python", "TensorFlow", "DialogFlow", "Node.js"],
-      link: "https://example-chatbot.com"
-    },
-    {
-      id: 6,
-      title: "Blockchain Voting System",
-      description: "A secure and transparent voting system built on blockchain technology for organizational decision-making.",
-      image: "/placeholder.svg?height=400&width=600",
-      category: "Blockchain",
-      technologies: ["Solidity", "Ethereum", "Web3.js", "React"],
-      link: "https://example-blockvote.com"
-    }
+
   ]
 
-  const categories = ["All", "Web Application", "Mobile App", "Website", "AI & Machine Learning", "Blockchain"]
+  const categories = ["All", "Web Application", "Website"]
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -93,8 +67,8 @@ export default function PortfolioPage() {
                       <Image
                         src={project.image}
                         alt={project.title}
-                        width={600}
-                        height={400}
+                        width={300}
+                        height={200}
                         className="rounded-t-lg object-cover h-48 w-full"
                       />
                     </CardHeader>
@@ -110,12 +84,14 @@ export default function PortfolioPage() {
                       </div>
                     </CardContent>
                     <CardFooter>
-                      <Button asChild className="w-full">
+                      <Button asChild className="gap-3 px-10">
                         <Link href={project.link} target="_blank" rel="noopener noreferrer">
                           View Project
                         </Link>
                       </Button>
                     </CardFooter>
+            
+                    
                   </Card>
                 ))}
             </div>
