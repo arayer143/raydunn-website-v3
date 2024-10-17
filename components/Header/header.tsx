@@ -25,13 +25,14 @@ export default function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="font-bold text-xl">MyLogo</span>
+            <span className="font-bold text-xl px-10">MyLogo</span>
           </Link>
         </div>
         <nav className="hidden md:flex space-x-6 text-sm font-medium">
           <Link href="/" className="transition-colors hover:text-primary">Home</Link>
           <Link href="/about" className="transition-colors hover:text-primary">About</Link>
           <Link href="/services" className="transition-colors hover:text-primary">Services</Link>
+          <Link href="/portfolio" className="transition-colors hover:text-primary">Portfolio</Link>
           <Link href="/contact" className="transition-colors hover:text-primary">Contact</Link>
         </nav>
         <div className="flex items-center space-x-4">
@@ -60,6 +61,7 @@ export default function Header() {
                 <Link href="/" className="text-lg font-medium hover:text-primary">Home</Link>
                 <Link href="/about" className="text-lg font-medium hover:text-primary">About</Link>
                 <Link href="/services" className="text-lg font-medium hover:text-primary">Services</Link>
+                <Link href="/portfolio" className="transition-colors hover:text-primary">Portfolio</Link>
                 <Link href="/contact" className="text-lg font-medium hover:text-primary">Contact</Link>
               </nav>
             </SheetContent>

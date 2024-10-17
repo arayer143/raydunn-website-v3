@@ -1,26 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import Link from "next/link"
+
 
 export default function AboutPage() {
   return (
     <>
-    <header className="bg-background border-b">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          <Link href="/" className="font-bold text-xl">TechCraft Solutions</Link>
-          <nav>
-            <ul className="flex space-x-4">
-              <li><Link href="/" className="hover:text-primary">Home</Link></li>
-              <li><Link href="/about" className="hover:text-primary">About</Link></li>
-              <li><Link href="/services" className="hover:text-primary">Services</Link></li>
-              <li><Link href="/contact" className="hover:text-primary">Contact</Link></li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-    </header>
+
     <div className="container mx-auto px-4 py-12 space-y-12">
       <header className="text-center space-y-4">
         <h1 className="text-4xl font-bold tracking-tight">About TechCraft Solutions</h1>
