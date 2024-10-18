@@ -6,32 +6,57 @@ import ContactSection from "./contact-section";
 import { Code, Globe, Laptop, Rocket, Zap } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import IntroSection from "@/components/Intro-Section/intro-section"
 
 
 export default function Home() {
   return (
 
     <div className="flex flex-col min-h-screen">
+
 <Header />
-    <main className="flex-1">
-      <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                Transforming Ideas into Digital Reality
+    
+  <main className="flex-3">
+  <section id="hero" className="relative w-full py-12 md:py-24 lg:py-32 xl:py-48">
+          <Image
+            src="/raydunnlogoheadert.webp"
+            alt="Background"
+            layout="fill"
+            objectFit="cover"
+            quality={100}
+            priority
+          />
+          <div className="absolute inset-0 bg-black/50" /> {/* Overlay for better text visibility */}
+          <div className="relative container px-4 md:px-6">
+            <div className="flex flex-col items-center space-y-4 text-center">
+              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none text-white">
+                Better Solutions For Your Business
               </h1>
-              <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+              <p className="mx-auto max-w-[700px] text-lg text-gray-200 md:text-xl">
                 We create stunning, high-performance websites that drive results for your business.
               </p>
-            </div>
-            <div className="space-x-4">
-              <Button>Get Started</Button>
-              <Button variant="outline">Learn More</Button>
+              <div className="space-x-4">
+                <Button asChild variant="default">
+                  <Link href="tel:5046502562">Call Us</Link>
+                </Button>
+                <Button asChild variant="outline">
+                  <Link href="mailto:contact@raydunnsolutions.com">Email Us</Link>
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+
+        <section className="w-full py-7 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
+<IntroSection />
+
+
+
+        </section>
+
+
+
       <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
         <div className="container px-4 md:px-6">
           <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
