@@ -34,7 +34,7 @@ export default function Header() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex-1 flex items-center justify-start">
             <Link href="/" className="flex items-center space-x-2">
-              <Image src="/raydunnlogoheadert.webp" alt="RayDunn Logo" width={150} height={40} className="h-10 w-auto" />
+              <Image src="/PNG Transparent Logo.png" alt="RayDunn Logo" width={150} height={40} className="h-10 w-auto" />
             </Link>
           </div>
           <nav className="hidden md:flex space-x-1 flex-1 justify-center">
