@@ -11,12 +11,17 @@ import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
 
 const services = [
-
   { name: "Web Development", href: "/services/web-development" },
   { name: "E-commerce Solutions", href: "/services/e-commerce" },
   { name: "SEO Optimization", href: "/services/seo" },
   { name: "Logo Design", href: "/services/logo-design" },
+]
 
+const portfolioItems = [
+  { name: "All Projects", href: "/portfolio" },
+  { name: "Clean Slate Pressure Washing", href: "/portfolio/clean-slate" },
+  { name: "Pristine Clean Soft Wash", href: "/portfolio/pristine-clean" },
+  { name: "OutKast Industrial Group", href: "/portfolio/outkast" },
 ]
 
 export default function Header() {
@@ -62,7 +67,22 @@ export default function Header() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            <NavLink href="/portfolio" active={pathname === "/portfolio"}>Portfolio</NavLink>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant={pathname.startsWith("/portfolio") ? "default" : "ghost"} className="text-sm font-medium">
+                  Portfolio <ChevronDown className="ml-1 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64">
+                {portfolioItems.map((item) => (
+                  <DropdownMenuItem key={item.href} asChild>
+                    <Link href={item.href} className="w-full">
+                      {item.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             <NavLink href="/contact" active={pathname === "/contact"}>Contact</NavLink>
           </nav>
           <div className="flex-1 flex items-center justify-end space-x-4">
@@ -99,7 +119,14 @@ export default function Header() {
                       </NavLink>
                     ))}
                   </div>
-                  <NavLink href="/portfolio" mobile active={pathname === "/portfolio"}>Portfolio</NavLink>
+                  <div className="space-y-2">
+                    <h3 className="font-medium text-lg">Portfolio</h3>
+                    {portfolioItems.map((item) => (
+                      <NavLink key={item.href} href={item.href} mobile active={pathname === item.href}>
+                        {item.name}
+                      </NavLink>
+                    ))}
+                  </div>
                   <NavLink href="/contact" mobile active={pathname === "/contact"}>Contact</NavLink>
                 </nav>
               </SheetContent>
