@@ -1,6 +1,7 @@
 
 import ServicesPage from "@/components/Services-Page/services-page";
 import Header from "@/components/Header/header";
+import Footer from "@/components/Footer/footer";
 
 
 
@@ -12,6 +13,7 @@ export default function Home() {
       <div className="flex flex-col gap-10">
         <Header />
         <ServicesPage />
+        <Footer />
         
   
    

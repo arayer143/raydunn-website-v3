@@ -2,15 +2,27 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Sun, Moon, Menu } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
+import { Sun, Moon, Menu, ChevronDown } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
+
+const services = [
+
+  { name: "Web Development", href: "/services/web-development" },
+  { name: "E-commerce Solutions", href: "/services/e-commerce" },
+  { name: "SEO Optimization", href: "/services/seo" },
+  { name: "Logo Design", href: "/services/logo-design" },
+
+]
 
 export default function Header() {
   const { setTheme, theme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     setMounted(true)
@@ -26,11 +38,32 @@ export default function Header() {
             </Link>
           </div>
           <nav className="hidden md:flex space-x-1 flex-1 justify-center">
-            <NavLink href="/">Home</NavLink>
-            <NavLink href="/about">About</NavLink>
-            <NavLink href="/services">Services</NavLink>
-            <NavLink href="/portfolio">Portfolio</NavLink>
-            <NavLink href="/contact">Contact</NavLink>
+            <NavLink href="/" active={pathname === "/"}>Home</NavLink>
+            <NavLink href="/about" active={pathname === "/about"}>About</NavLink>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant={pathname.startsWith("/services") ? "default" : "ghost"} className="text-sm font-medium">
+                  Services <ChevronDown className="ml-1 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem asChild>
+                  <Link href="/services" className="w-full font-medium">
+                    All Services
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                {services.map((service) => (
+                  <DropdownMenuItem key={service.href} asChild>
+                    <Link href={service.href} className="w-full">
+                      {service.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <NavLink href="/portfolio" active={pathname === "/portfolio"}>Portfolio</NavLink>
+            <NavLink href="/contact" active={pathname === "/contact"}>Contact</NavLink>
           </nav>
           <div className="flex-1 flex items-center justify-end space-x-4">
             {mounted && (
@@ -55,11 +88,19 @@ export default function Header() {
               </SheetTrigger>
               <SheetContent side="right">
                 <nav className="flex flex-col space-y-4 mt-4">
-                  <NavLink href="/" mobile>Home</NavLink>
-                  <NavLink href="/about" mobile>About</NavLink>
-                  <NavLink href="/services" mobile>Services</NavLink>
-                  <NavLink href="/portfolio" mobile>Portfolio</NavLink>
-                  <NavLink href="/contact" mobile>Contact</NavLink>
+                  <NavLink href="/" mobile active={pathname === "/"}>Home</NavLink>
+                  <NavLink href="/about" mobile active={pathname === "/about"}>About</NavLink>
+                  <div className="space-y-2">
+                    <h3 className="font-medium text-lg">Services</h3>
+                    <NavLink href="/services" mobile active={pathname === "/services"}>All Services</NavLink>
+                    {services.map((service) => (
+                      <NavLink key={service.href} href={service.href} mobile active={pathname === service.href}>
+                        {service.name}
+                      </NavLink>
+                    ))}
+                  </div>
+                  <NavLink href="/portfolio" mobile active={pathname === "/portfolio"}>Portfolio</NavLink>
+                  <NavLink href="/contact" mobile active={pathname === "/contact"}>Contact</NavLink>
                 </nav>
               </SheetContent>
             </Sheet>
@@ -70,14 +111,16 @@ export default function Header() {
   )
 }
 
-function NavLink({ href, children, mobile = false }: { href: string; children: React.ReactNode; mobile?: boolean }) {
+function NavLink({ href, children, mobile = false, active = false }: { href: string; children: React.ReactNode; mobile?: boolean; active?: boolean }) {
   return (
     <Link href={href} passHref>
       <Button
-        variant="ghost"
+        variant={active ? "default" : "ghost"}
         className={`${
           mobile ? 'justify-start w-full text-lg' : 'text-sm'
-        } font-medium transition-colors hover:text-primary focus:text-primary focus:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary`}
+        } font-medium transition-colors hover:text-primary focus:text-primary focus:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
+          active ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''
+        }`}
       >
         {children}
       </Button>

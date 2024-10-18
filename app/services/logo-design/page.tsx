@@ -1,7 +1,8 @@
-
 import Footer from "@/components/Footer/footer";
-import ContactSection from "../contact-section";
 import Header from "@/components/Header/header";
+import LogoDesignPage from "@/components/Services-Page/logo-design";
+
+
 
 
 
@@ -12,7 +13,7 @@ export default function Home() {
     <main className="h-full w-full">
       <div className="flex flex-col gap-10">
         <Header />
-        <ContactSection />
+        <LogoDesignPage />
         <Footer />
   
    
