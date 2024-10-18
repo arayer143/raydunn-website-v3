@@ -1,20 +1,16 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from "react"
-import { useTheme } from "next-themes"
-import Link from "next/link"
-
-import { Moon, Sun, Menu } from "lucide-react"
+import Image from 'next/image'
+import Link from 'next/link'
 import { Button } from "@/components/ui/button"
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sun, Moon, Menu } from "lucide-react"
+import { useTheme } from "next-themes"
+import { useState, useEffect } from "react"
 
 export default function Header() {
+  const { setTheme, theme } = useTheme()
   const [mounted, setMounted] = useState(false)
-  const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     setMounted(true)
@@ -25,15 +21,15 @@ export default function Header() {
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="font-bold text-xl px-10">MyLogo</span>
+            <Image src="/raydunnlogoheadert.webp" alt="RayDunn Logo" width={180} height={40} className="h-10 w-auto" />
           </Link>
         </div>
-        <nav className="hidden md:flex space-x-6 text-sm font-medium">
-          <Link href="/" className="transition-colors hover:text-primary">Home</Link>
-          <Link href="/about" className="transition-colors hover:text-primary">About</Link>
-          <Link href="/services" className="transition-colors hover:text-primary">Services</Link>
-          <Link href="/portfolio" className="transition-colors hover:text-primary">Portfolio</Link>
-          <Link href="/contact" className="transition-colors hover:text-primary">Contact</Link>
+        <nav className="hidden md:flex space-x-1">
+          <NavLink href="/">Home</NavLink>
+          <NavLink href="/about">About</NavLink>
+          <NavLink href="/services">Services</NavLink>
+          <NavLink href="/portfolio">Portfolio</NavLink>
+          <NavLink href="/contact">Contact</NavLink>
         </nav>
         <div className="flex items-center space-x-4">
           {mounted && (
@@ -58,11 +54,11 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent side="right">
               <nav className="flex flex-col space-y-4 mt-4">
-                <Link href="/" className="text-lg font-medium hover:text-primary">Home</Link>
-                <Link href="/about" className="text-lg font-medium hover:text-primary">About</Link>
-                <Link href="/services" className="text-lg font-medium hover:text-primary">Services</Link>
-                <Link href="/portfolio" className="transition-colors hover:text-primary">Portfolio</Link>
-                <Link href="/contact" className="text-lg font-medium hover:text-primary">Contact</Link>
+                <NavLink href="/" mobile>Home</NavLink>
+                <NavLink href="/about" mobile>About</NavLink>
+                <NavLink href="/services" mobile>Services</NavLink>
+                <NavLink href="/portfolio" mobile>Portfolio</NavLink>
+                <NavLink href="/contact" mobile>Contact</NavLink>
               </nav>
             </SheetContent>
           </Sheet>
@@ -72,4 +68,17 @@ export default function Header() {
   )
 }
 
-
+function NavLink({ href, children, mobile = false }: { href: string; children: React.ReactNode; mobile?: boolean }) {
+  return (
+    <Link href={href} passHref>
+      <Button
+        variant="ghost"
+        className={`${
+          mobile ? 'justify-start w-full text-lg' : 'text-sm'
+        } font-medium transition-colors hover:text-primary focus:text-primary focus:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary`}
+      >
+        {children}
+      </Button>
+    </Link>
+  )
+}
