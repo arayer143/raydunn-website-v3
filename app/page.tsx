@@ -3,6 +3,8 @@ import Header from "@/components/Header/header";
 import ContactSection from "./contact-section";
 import IntroSection from "@/components/Intro-Section/intro-section"
 import WhyChooseUsSection from "@/components/Services-sections/why-choose-us";
+import TechnologiesSection from "@/components/Home-page-sections/technologies-section";
+import CTASection from "@/components/Call-to-action/cta-section";
 import Hero from "@/components/Hero/hero";
 import Footer from "@/components/Footer/footer";
 
@@ -21,6 +23,8 @@ export default function Home() {
         <Hero />
         <IntroSection />
         <WhyChooseUsSection />
+        <TechnologiesSection />
+        <CTASection />
       
   
         </section>

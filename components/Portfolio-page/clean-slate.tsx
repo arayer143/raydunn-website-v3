@@ -22,10 +22,10 @@ export default function CleanSlateShowcasePage() {
         <div className="mb-16 bg-card rounded-lg shadow-lg overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8">
             <div className="flex items-center justify-center lg:justify-start">
-              <div className="relative w-48 h-48">
+              <div className="relative w-64 h-32">
                 <Image
-                  src="/placeholder.svg?height=200&width=200"
-                  alt="Clean Slate Pressure Washing Logo"
+                  src="/cleanslatelol-whiteBG.jpg"
+                  alt="Clean Slate Pressure Washing Services Logo"
                   fill
                   className="object-contain"
                 />
