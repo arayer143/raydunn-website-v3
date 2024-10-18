@@ -5,6 +5,8 @@ import IntroSection from "@/components/Intro-Section/intro-section"
 import WhyChooseUsSection from "@/components/Services-sections/why-choose-us";
 import TechnologiesSection from "@/components/Home-page-sections/technologies-section";
 import CTASection from "@/components/Call-to-action/cta-section";
+import PortfolioPage from "@/components/Portfolio-page/portfolio-page";
+import FAQSection from "@/components/Home-page-sections/faq";
 import Hero from "@/components/Hero/hero";
 import Footer from "@/components/Footer/footer";
 
@@ -25,6 +27,8 @@ export default function Home() {
         <WhyChooseUsSection />
         <TechnologiesSection />
         <CTASection />
+        <PortfolioPage />
+        <FAQSection />
       
   
         </section>
