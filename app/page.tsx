@@ -3,6 +3,7 @@ import Header from "@/components/Header/header";
 import ContactSection from "./contact-section";
 import IntroSection from "@/components/Intro-Section/intro-section"
 import WhyChooseUsSection from "@/components/Services-sections/why-choose-us";
+import OurServicesSection from "@/components/Home-page-sections/our-services"
 import TechnologiesSection from "@/components/Home-page-sections/technologies-section";
 import CTASection from "@/components/Call-to-action/cta-section";
 import PortfolioPage from "@/components/Portfolio-page/portfolio-page";
@@ -24,6 +25,7 @@ export default function Home() {
         <section className="w-full bg-gray-100 dark:bg-gray-800">
         <Hero />
         <IntroSection />
+        <OurServicesSection />
         <WhyChooseUsSection />
         <TechnologiesSection />
         <CTASection />
