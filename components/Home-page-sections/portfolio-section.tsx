@@ -12,19 +12,26 @@ const projects = [
   {
     title: "Clean Slate",
     description: "A modern, responsive website for professional pressure washing services.",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "/cleanslatelol-whiteBG.jpg",
     link: "/projects/clean-slate"
   },
   {
     title: "Pristine Clean",
     description: "Showcasing professional soft wash services with a sleek, user-friendly design.",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "/pristinecleanlogo.webp",
     link: "/projects/pristine-clean"
   },
   {
     title: "OutKast Industrial",
     description: "A robust website for industrial cleaning services, catering to B2B clients.",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "/outkast-logo.webp",
+    link: "/projects/outkast-industrial"
+  },
+
+  {
+    title: "RayDunn",
+    description: "A robust website for industrial cleaning services, catering to B2B clients.",
+    image: "",
     link: "/projects/outkast-industrial"
   }
 ]

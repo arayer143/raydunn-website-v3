@@ -30,8 +30,18 @@ export default function PortfolioPage() {
       title: "OutKast Industrial Group",
       description: "Website for OutKast Industrial Group LLC",
       image: "/outkast-logo.webp",
-      category: "Mobile App",
+      category: "Website",
       technologies: ["Bootstrap", "HTML", "Saas", "JavaScript", "PHP"],
+      link: "https://outkastindustrial.com/"
+    },
+
+    {
+      id: 4,
+      title: "RayDunn Web Solutions",
+      description: "Our Homepage for our company RayDunn",
+      image: "/PNG Transparent Logo.png",
+      category: "Web Application",
+      technologies: ["Next.js, "],
       link: "https://example-fitnessapp.com"
     },
 
