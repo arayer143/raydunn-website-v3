@@ -35,7 +35,7 @@ export default function OurServicesSection() {
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 })
 
   return (
-    <section ref={sectionRef} className="w-full py-12 md:py-24 lg:py-32 bg-gray-50 dark:bg-gray-900">
+    <section ref={sectionRef} className="w-full py-12 md:py-24 lg:py-32 bg-secondary">
       <div className="container mx-auto px-4 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -43,10 +43,10 @@ export default function OurServicesSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-gray-900 dark:text-gray-100">
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-secondary-foreground">
             Our Services
           </h2>
-          <p className="mt-4 text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <p className="mt-4 text-xl text-secondary-foreground/80 max-w-3xl mx-auto">
             We offer a comprehensive range of web development services to help your business thrive online.
           </p>
         </motion.div>
@@ -59,17 +59,15 @@ export default function OurServicesSection() {
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="h-full flex flex-col">
+              <Card className="h-full flex flex-col items-center text-center bg-card">
                 <CardHeader>
                   <div className="w-12 h-12 rounded-full bg-primary flex items-center justify-center mb-4">
                     <service.icon className="h-6 w-6 text-primary-foreground" />
                   </div>
-                  <CardTitle className="text-xl font-bold">{service.title}</CardTitle>
+                  <CardTitle className="text-xl font-bold text-card-foreground">{service.title}</CardTitle>
                 </CardHeader>
-                <CardContent className="flex-grow">
-                  <CardDescription className="text-gray-600 dark:text-gray-300">
-                    {service.description}
-                  </CardDescription>
+                <CardContent className="flex-grow flex items-center justify-center">
+                  <CardDescription className="text-card-foreground/80">{service.description}</CardDescription>
                 </CardContent>
               </Card>
             </motion.div>
@@ -82,7 +80,7 @@ export default function OurServicesSection() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mt-12 text-center"
         >
-          <Button asChild size="lg">
+          <Button asChild size="lg" variant="secondary">
             <Link href="/services" className="inline-flex items-center">
               View All Services
               <ArrowRight className="ml-2 h-4 w-4" />
