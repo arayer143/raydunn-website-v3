@@ -3,11 +3,13 @@
 import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Phone, Mail } from 'lucide-react'
+import IntroSection from '../Intro-Section/intro-section'
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false)
+  const nextSectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setIsVisible(true)
@@ -29,117 +31,121 @@ export default function Hero() {
     tap: { scale: 0.95 }
   }
 
-  const backgroundVariants = {
-    animate: {
-      backgroundPosition: ['0% 0%', '100% 100%'],
-      transition: {
-        duration: 20,
-        ease: "linear",
-        repeat: Infinity,
-        repeatType: "reverse"
-      }
-    }
-  }
-
-  const particleVariants = {
-    animate: {
-      y: ['0%', '100%'],
-      opacity: [0, 1, 0],
-      transition: {
-        duration: 5,
-        ease: "easeInOut",
-        repeat: Infinity,
-        repeatType: "loop",
-        delay: 0 // Remove the custom delay
-      }
-    }
+  const scrollToNextSection = () => {
+    nextSectionRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
-    <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-indigo-950 transition-colors duration-500">
-      <motion.div 
-        className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMjggMGEyOCAyOCAwIDEgMCA1NiAwYTI4IDI4IDAgMSAwLTU2IDB6IiBzdHJva2U9IiM5M2MzZWUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4zIi8+PC9zdmc+')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMjggMGEyOCAyOCAwIDEgMCA1NiAwYTI4IDI4IDAgMSAwLTU2IDB6IiBzdHJva2U9IiM2MzY2ZjEiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4zIi8+PC9zdmc+')]"
-        variants={backgroundVariants}
-        animate="animate"
-      />
-      {[...Array(30)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-blue-400 dark:bg-indigo-400 rounded-full"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `-5%`,
-          }}
-          variants={particleVariants}
-          animate="animate"
-          
-        />
-      ))}
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+    <>
+      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-indigo-950 transition-colors duration-500">
         <motion.div 
-          initial="hidden"
-          animate={isVisible ? "visible" : "hidden"}
-          variants={{
-            visible: { transition: { staggerChildren: 0.3 } }
+          className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMjggMGEyOCAyOCAwIDEgMCA1NiAwYTI4IDI4IDAgMSAwLTU2IDB6IiBzdHJva2U9IiM5M2MzZWUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4zIi8+PC9zdmc+')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMjggMGEyOCAyOCAwIDEgMCA1NiAwYTI4IDI4IDAgMSAwLTU2IDB6IiBzdHJva2U9IiM2MzY2ZjEiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4zIi8+PC9zdmc+')]"
+          animate={{
+            backgroundPosition: ['0% 0%', '100% 100%'],
+            transition: {
+              duration: 20,
+              ease: "linear",
+              repeat: Infinity,
+              repeatType: "reverse"
+            }
           }}
-          className="flex flex-col items-center space-y-10 text-center"
-        >
-          <motion.h1 
-            variants={fadeInUp}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight max-w-5xl"
-          >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-300 dark:via-indigo-300 dark:to-purple-300">
-              Better Solutions
-            </span>{" "}
-            <span className="text-gray-900 dark:text-white">For Your Business</span>
-          </motion.h1>
-          <motion.p 
-            variants={fadeInUp}
-            className="text-xl sm:text-2xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto"
-          >
-            We create stunning, high-performance websites that drive results for your business.
-          </motion.p>
+        />
+        {[...Array(30)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-blue-400 dark:bg-indigo-400 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `-5%`,
+            }}
+            animate={{
+              y: ['0%', '100%'],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 5,
+              ease: "easeInOut",
+              repeat: Infinity,
+              repeatType: "loop",
+              delay: i * 0.1
+            }}
+          />
+        ))}
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
           <motion.div 
-            variants={fadeInUp}
-            className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 mt-8"
+            initial="hidden"
+            animate={isVisible ? "visible" : "hidden"}
+            variants={{
+              visible: { transition: { staggerChildren: 0.3 } }
+            }}
+            className="flex flex-col items-center space-y-10 text-center"
           >
-            <motion.div
-              whileHover="hover"
-              whileTap="tap"
-              variants={buttonVariants}
+            <motion.h1 
+              variants={fadeInUp}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight max-w-5xl"
             >
-              <Button asChild size="lg" className="relative bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white px-8 py-4 rounded-full transition-colors duration-300 ease-in-out shadow-lg">
-                <Link href="tel:5046502562" className="flex items-center space-x-2">
-                  <Phone size={20} />
-                  <span>Call Us</span>
-                </Link>
-              </Button>
-            </motion.div>
-            <motion.div
-              whileHover="hover"
-              whileTap="tap"
-              variants={buttonVariants}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-300 dark:via-indigo-300 dark:to-purple-300">
+                Better Solutions
+              </span>{" "}
+              <span className="text-gray-900 dark:text-white">For Your Business</span>
+            </motion.h1>
+            <motion.p 
+              variants={fadeInUp}
+              className="text-xl sm:text-2xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto"
             >
-              <Button asChild size="lg" className="relative bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 text-white px-8 py-4 rounded-full transition-colors duration-300 ease-in-out shadow-lg">
-                <Link href="mailto:contact@raydunnsolutions.com" className="flex items-center space-x-2">
-                  <Mail size={20} />
-                  <span>Email Us</span>
-                </Link>
-              </Button>
+              We create stunning, high-performance websites that drive results for your business.
+            </motion.p>
+            <motion.div 
+              variants={fadeInUp}
+              className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 mt-8"
+            >
+              <motion.div
+                whileHover="hover"
+                whileTap="tap"
+                variants={buttonVariants}
+              >
+                <Button asChild size="lg" className="relative bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white px-8 py-4 rounded-full transition-colors duration-300 ease-in-out shadow-lg">
+                  <Link href="tel:5046502562" className="flex items-center space-x-2">
+                    <Phone size={20} />
+                    <span>Call Us</span>
+                  </Link>
+                </Button>
+              </motion.div>
+              <motion.div
+                whileHover="hover"
+                whileTap="tap"
+                variants={buttonVariants}
+              >
+                <Button asChild size="lg" className="relative bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 text-white px-8 py-4 rounded-full transition-colors duration-300 ease-in-out shadow-lg">
+                  <Link href="mailto:contact@raydunnsolutions.com" className="flex items-center space-x-2">
+                    <Mail size={20} />
+                    <span>Email Us</span>
+                  </Link>
+                </Button>
+              </motion.div>
             </motion.div>
           </motion.div>
+        </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.5, duration: 0.5 }}
+          className="absolute bottom-0 left-0 right-0 z-10 flex justify-center pb-8"
+        >
+          <button
+            onClick={scrollToNextSection}
+            className="focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-full p-2"
+            aria-label="Scroll to next section"
+          >
+            <svg className="w-8 h-8 text-blue-600 dark:text-indigo-400 animate-bounce" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+          </button>
         </motion.div>
+      </section>
+      <div ref={nextSectionRef} className="w-full bg-gray-100 dark:bg-gray-800">
+        <IntroSection />
       </div>
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.5, duration: 0.5 }}
-        className="absolute bottom-0 left-0 right-0 z-10 flex justify-center pb-8"
-      >
-        <svg className="w-8 h-8 text-blue-600 dark:text-indigo-400 animate-bounce" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-          <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-        </svg>
-      </motion.div>
-    </section>
+    </>
   )
 }
