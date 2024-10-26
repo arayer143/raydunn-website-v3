@@ -37,10 +37,10 @@ export default function FAQSection() {
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 })
 
   return (
-    <section ref={sectionRef} className="w-full py-12 md:py-24 lg:py-32 bg-white dark:bg-gray-900">
-      <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+    <section ref={sectionRef} className="w-full py-12 md:py-24 lg:py-32 bg-background">
+      <div className="container mx-auto px-4 md:px-6 max-w-4xl">
         <motion.h2 
-          className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12 text-gray-900 dark:text-white"
+          className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12 text-foreground"
           initial={{ opacity: 0, y: -20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
           transition={{ duration: 0.8 }}
@@ -51,31 +51,27 @@ export default function FAQSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="space-y-4"
+          className="space-y-6"
         >
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`} className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden mb-4">
-                <AccordionTrigger className="text-left text-lg font-semibold text-gray-800 dark:text-white p-4 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                  <motion.div
-                    initial={false}
-                    animate={{ color: ["#2563eb", "#4f46e5"] }}
-                    transition={{ duration: 2, repeat: Infinity, repeatType: "reverse" }}
-                    className="flex items-center"
-                  >
-                    <span className="mr-2">Q:</span>
-                    {faq.question}
-                  </motion.div>
+              <AccordionItem key={index} value={`item-${index}`} className="mb-4 rounded-lg border border-border bg-card">
+                <AccordionTrigger className="text-left text-lg font-semibold text-foreground px-6 py-4 hover:bg-muted/50 transition-colors rounded-t-lg">
+                  <span className="mr-2 text-primary">Q:</span>
+                  {faq.question}
                 </AccordionTrigger>
                 <AnimatePresence>
-                  <AccordionContent className="text-gray-600 dark:text-gray-300 p-4 bg-gray-50 dark:bg-gray-800">
+                  <AccordionContent className="text-muted-foreground px-6 pb-4">
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <p className="mb-2"><span className="font-semibold text-gray-800 dark:text-white">A:</span> {faq.answer}</p>
+                      <p className="mt-2">
+                        <span className="font-semibold text-foreground mr-2">A:</span>
+                        {faq.answer}
+                      </p>
                     </motion.div>
                   </AccordionContent>
                 </AnimatePresence>
