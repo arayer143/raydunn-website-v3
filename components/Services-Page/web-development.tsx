@@ -42,7 +42,7 @@ export default function WebDevelopmentService() {
           </div>
           <div className="relative h-64 sm:h-80 lg:h-96">
             <Image
-              src="/placeholder.svg?height=600&width=800"
+              src="/web-development.jpg"
               alt="Web Development Illustration"
               layout="fill"
               objectFit="cover"

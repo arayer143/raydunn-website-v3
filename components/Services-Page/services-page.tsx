@@ -164,31 +164,16 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="bg-primary text-primary-foreground py-16 relative overflow-hidden">
-          <motion.div 
-            className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMjggMGEyOCAyOCAwIDEgMCA1NiAwYTI4IDI4IDAgMSAwLTU2IDB6IiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBvcGFjaXR5PSIwLjMiLz48L3N2Zz4=')]"
-            style={{ color: 'currentColor' }}
-            animate={{
-              backgroundPosition: ['0% 0%', '100% 100%'],
-              transition: {
-                duration: 20,
-                ease: "linear",
-                repeat: Infinity,
-                repeatType: "reverse"
-              }
-            }}
-          />
-          <div className="container mx-auto px-4 text-center space-y-6 relative z-10">
-            <h2 className="text-3xl font-bold mb-4">Ready to Start Your Project?</h2>
-            <p className="text-lg max-w-2xl mx-auto">
-              Contact us today to discuss how we can help bring your web development ideas to life. 
-              Let's create something amazing together!
-            </p>
-            <Button asChild size="lg" variant="secondary" className="mt-4">
-              <Link href="/contact">Get in Touch</Link>
-            </Button>
-          </div>
-        </section>
+
+        <div className="bg-primary text-primary-foreground rounded-lg p-8 text-center shadow-2xl">
+          <h2 className="text-3xl font-bold mb-4">Ready to Start Your Web Development Project?</h2>
+          <p className="text-lg mb-6 text-primary-foreground/80">
+            Let's discuss how we can bring your vision to life with our expert web development services.
+          </p>
+          <Button asChild size="lg" variant="secondary" className="font-semibold hover:bg-secondary/90">
+            <Link href="/contact">Get in Touch</Link>
+          </Button>
+        </div>
       </main>
     </div>
   )
