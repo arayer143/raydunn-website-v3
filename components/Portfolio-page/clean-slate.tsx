@@ -2,8 +2,10 @@ import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Code, Layout, Palette, FileJson, Database, Globe, Droplet, Shield, Calendar, Star } from 'lucide-react'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Separator } from "@/components/ui/separator"
+import { AspectRatio } from "@/components/ui/aspect-ratio"
+import { Code, Layout, Palette, FileJson, Database, Globe, Droplet, Shield, Calendar, Star, ExternalLink } from 'lucide-react'
 import React from 'react'
 
 export default function CleanSlateShowcasePage() {
@@ -19,83 +21,90 @@ export default function CleanSlateShowcasePage() {
           </p>
         </div>
 
-        <div className="mb-16 bg-card rounded-lg shadow-lg overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-8">
-            <div className="flex items-center justify-center lg:justify-start">
-              <div className="relative w-64 h-32">
-                <Image
-                  src="/cleanslatelol-whiteBG.jpg"
-                  alt="Clean Slate Pressure Washing Services Logo"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-            </div>
-            <div className="lg:col-span-2">
-              <h2 className="text-3xl font-bold mb-6 text-primary">Project Overview</h2>
-              <p className="text-lg text-muted-foreground mb-6">
-                This website was developed for Clean Slate Pressure Washing, a professional cleaning service. Our goal was to create a 
-                visually appealing, user-friendly, and high-performance website that would showcase their 
-                services effectively and provide a seamless user experience.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {['HTML5', 'CSS3', 'JavaScript', 'React', 'Next.js', 'Tailwind CSS'].map((tech) => (
-                  <Badge key={tech} variant="secondary">{tech}</Badge>
-                ))}
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16 items-center">
+          <div className="order-2 lg:order-1">
+            <h2 className="text-3xl font-bold mb-6 text-primary">Project Overview</h2>
+            <p className="text-lg text-muted-foreground mb-6">
+              This website was developed for Clean Slate Pressure Washing, a professional cleaning service. Our goal was to create a 
+              visually appealing, user-friendly, and high-performance website that would showcase their 
+              services effectively and provide a seamless user experience.
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {['HTML5', 'CSS3', 'JavaScript', 'React', 'Next.js', 'Tailwind CSS'].map((tech) => (
+                <Badge key={tech} variant="secondary">{tech}</Badge>
+              ))}
             </div>
           </div>
-          <div className="bg-muted p-8">
-            <h2 className="text-3xl font-bold mb-6 text-primary">Key Features</h2>
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                "Responsive design for all devices",
-                "Dynamic service catalog with detailed information",
-                "Contact form for customer inquiries",
-                "Photo gallery of completed projects",
-                "Integration with Google Maps for service areas",
-                "Custom domain and reliable hosting",
-              ].map((feature, index) => (
-                <li key={index} className="flex items-center space-x-3 text-foreground">
-                  <Droplet className="h-5 w-5 text-primary flex-shrink-0" />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+          <div className="order-1 lg:order-2">
+            <AspectRatio ratio={16 / 9} className="bg-muted rounded-xl overflow-hidden">
+              <Image
+                src="/cleanslatelol-whiteBG.jpg"
+                alt="Clean Slate Pressure Washing Services Logo"
+                fill
+                className="object-contain"
+              />
+            </AspectRatio>
+            <div className="mt-4 text-center">
+              <Button asChild size="lg" variant="outline" className="font-semibold">
+                <a href="https://cleanslatepressurewashingnola.com/" target="_blank" rel="noopener noreferrer">
+                  Visit Clean Slate Pressure Washing <ExternalLink className="ml-2 h-4 w-4" />
+                </a>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <Separator className="my-12" />
+
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold mb-6 text-primary">Key Features</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              "Responsive design for all devices",
+              "Dynamic service catalog with detailed information",
+              "Contact form for customer inquiries",
+              "Photo gallery of completed projects",
+              "Integration with Google Maps for service areas",
+              "Custom domain and reliable hosting",
+            ].map((feature, index) => (
+              <Card key={index}>
+                <CardContent className="flex items-center space-x-4 p-6">
+                  <Droplet className="h-10 w-10 text-primary flex-shrink-0" />
+                  <span className="text-lg">{feature}</span>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
 
         <div className="mb-16">
-          <Tabs defaultValue="desktop" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="desktop">Desktop View</TabsTrigger>
-              <TabsTrigger value="mobile">Mobile View</TabsTrigger>
-            </TabsList>
-            <TabsContent value="desktop" className="mt-6">
-              <div className="flex justify-center items-center">
-                <div className="relative w-full max-w-[1200px] aspect-[3/2]">
-                  <Image
-                    src="/placeholder.svg?height=600&width=1200"
-                    alt="Clean Slate Pressure Washing Website Desktop View"
-                    fill
-                    className="rounded-lg shadow-lg object-contain"
-                  />
-                </div>
-              </div>
-            </TabsContent>
-            <TabsContent value="mobile" className="mt-6">
-              <div className="flex justify-center items-center">
-                <div className="relative w-full max-w-[400px] aspect-[1/2]">
-                  <Image
-                    src="/placeholder.svg?height=800&width=400"
-                    alt="Clean Slate Pressure Washing Website Mobile View"
-                    fill
-                    className="rounded-lg shadow-lg object-contain"
-                  />
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
+          <h2 className="text-3xl font-bold mb-6 text-primary">Website Highlights</h2>
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger>Modern Design Language</AccordionTrigger>
+              <AccordionContent>
+                The website features a clean, professional design that aligns with Clean Slate Pressure Washing's brand identity. We used a modern color palette, typography, and layout to create a visually appealing and easy-to-navigate site.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-2">
+              <AccordionTrigger>Optimized User Experience</AccordionTrigger>
+              <AccordionContent>
+                We prioritized user experience by implementing intuitive navigation, fast-loading pages, and clear calls-to-action. The site structure allows visitors to quickly find information about pressure washing services and request quotes.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-3">
+              <AccordionTrigger>Responsive Design</AccordionTrigger>
+              <AccordionContent>
+                The website is fully responsive, ensuring a seamless experience across all devices, from desktop computers to mobile phones. This responsiveness helps to capture and retain visitors regardless of their preferred device.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-4">
+              <AccordionTrigger>SEO and Performance Optimization</AccordionTrigger>
+              <AccordionContent>
+                We implemented various SEO best practices, including semantic HTML structure, optimized meta tags, and fast-loading assets. This helps improve the site's visibility in search engine results and enhances overall performance.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
