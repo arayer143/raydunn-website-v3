@@ -70,7 +70,7 @@ export default function Footer() {
             </nav>
           </motion.div>
           <motion.div variants={fadeInUp} className="space-y-4 flex flex-col items-center md:items-start">
-            <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Contact Us</h4>
+            <h4 className="text-lg font-semibold text-center text-gray-900 dark:text-white">Contact Us</h4>
             <div className="flex flex-col space-y-4 w-full md:w-auto">
               <motion.div
                 whileHover="hover"

@@ -1,6 +1,6 @@
 
 import ServicesPage from "@/components/Services-Page/services-page";
-import Header from "@/components/Header/header";
+import Header from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/footer";
 
 

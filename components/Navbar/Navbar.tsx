@@ -24,7 +24,7 @@ const portfolioItems = [
   { name: "OutKast Industrial Group", href: "/portfolio/outkast" },
 ]
 
-export default function Header() {
+export default function Navbar() {
   const { setTheme, theme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const pathname = usePathname()

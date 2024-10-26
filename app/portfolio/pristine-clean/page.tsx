@@ -1,6 +1,6 @@
 
 import Footer from "@/components/Footer/footer";
-import Header from "@/components/Header/header";
+import Header from "@/components/Navbar/Navbar";
 import PristineCleanShowcasePage from "@/components/Portfolio-page/pristine-clean";
 
 

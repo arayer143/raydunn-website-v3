@@ -1,5 +1,5 @@
 import Footer from "@/components/Footer/footer";
-import Header from "@/components/Header/header";
+import Header from "@/components/Navbar/Navbar";
 import LogoDesignPage from "@/components/Services-Page/logo-design";
 
 

@@ -1,5 +1,4 @@
 
-import Header from "@/components/Header/header";
 import ContactSection from "./contact-section";
 import WhyChooseUsSection from "@/components/Services-sections/why-choose-us";
 import OurServicesSection from "@/components/Home-page-sections/our-services"
@@ -9,6 +8,7 @@ import PortfolioPage from "@/components/Portfolio-page/portfolio-page";
 import FAQSection from "@/components/Home-page-sections/faq";
 import Hero from "@/components/Hero/hero";
 import Footer from "@/components/Footer/footer";
+import Navbar from "@/components/Navbar/Navbar";
 
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
 
     <div className="flex flex-col min-h-screen">
 
-<Header />
+<Navbar />
 
     
   <main className="flex-3">
