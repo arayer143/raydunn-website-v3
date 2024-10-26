@@ -109,15 +109,7 @@ export default function PortfolioPage() {
         ))}
       </Tabs>
 
-      <section className="text-center mt-16">
-        <h2 className="text-3xl font-bold mb-4">Ready to start your project?</h2>
-        <p className="text-xl text-muted-foreground mb-8">
-          Let&apos;s collaborate to bring your ideas to life with cutting-edge web solutions.
-        </p>
-        <Button asChild size="lg">
-          <Link href="/contact">Contact Us</Link>
-        </Button>
-      </section>
+
     </div>
   )
 }

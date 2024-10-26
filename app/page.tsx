@@ -26,8 +26,9 @@ export default function Home() {
         <OurServicesSection />
         <WhyChooseUsSection />
         <TechnologiesSection />
-        <CTASection />
+        
         <PortfolioPage />
+        <CTASection />
         <FAQSection />
       
   
