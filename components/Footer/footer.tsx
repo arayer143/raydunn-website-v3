@@ -117,13 +117,7 @@ export default function Footer() {
                 <Facebook className="h-5 w-5" />
               </Link>
             </Button>
-            <Button asChild variant="ghost" size="icon" className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800">
-              <Link href="https://www.google.com/business" target="_blank" rel="noopener noreferrer" aria-label="Google Business Profile">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.383 0 0 5.383 0 12s5.383 12 12 12 12-5.383 12-12S18.617 0 12 0zm-1.504 16.5h3.008v-1.5h-3.008v1.5zm6.004-4.5H7.5v1.5h9v-1.5zm0-3H7.5v1.5h9V9zm0-3H7.5v1.5h9V6z" />
-                </svg>
-              </Link>
-            </Button>
+     
           </div>
         </motion.div>
       </motion.div>

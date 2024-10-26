@@ -43,7 +43,7 @@ export default function SEOOptimizationPage() {
           </div>
           <div className="relative h-64 sm:h-80 lg:h-96">
             <Image
-              src="/placeholder.svg?height=600&width=800"
+              src="/seo.jpg"
               alt="SEO Optimization Illustration"
               layout="fill"
               objectFit="cover"

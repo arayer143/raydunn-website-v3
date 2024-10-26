@@ -42,7 +42,7 @@ export default function LogoDesignPage() {
           </div>
           <div className="relative h-64 sm:h-80 lg:h-96">
             <Image
-              src="/placeholder.svg?height=600&width=800"
+              src="/PNG Transparent Logo.png"
               alt="Logo Design Illustration"
               layout="fill"
               objectFit="cover"
