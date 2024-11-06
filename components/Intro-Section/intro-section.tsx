@@ -11,7 +11,7 @@ export default function IntroSection() {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden py-8 px-4 sm:py-24 sm:px-6 lg:px-8">
+    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden py-8 px-4 sm:px-6">
       <motion.div
         className="absolute inset-0 z-0"
         animate={{

@@ -67,6 +67,7 @@ export default function Navbar() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+            <NavLink href="/pricing" active={pathname === "/pricing"}>Pricing</NavLink>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant={pathname.startsWith("/portfolio") ? "default" : "ghost"} className="text-sm font-medium">
@@ -119,6 +120,7 @@ export default function Navbar() {
                       </NavLink>
                     ))}
                   </div>
+                  <NavLink href="/pricing" mobile active={pathname === "/pricing"}>Pricing</NavLink>
                   <div className="space-y-2">
                     <h3 className="font-medium text-lg">Portfolio</h3>
                     {portfolioItems.map((item) => (
