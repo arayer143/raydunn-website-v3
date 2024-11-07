@@ -51,7 +51,7 @@ export default function OurServicesSection() {
           }
         }}
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-background/30" />
+      <div className="absolute inset-0" />
       <div className="container relative z-10 mx-auto px-4 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

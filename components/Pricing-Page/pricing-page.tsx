@@ -1,18 +1,19 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Check, X, ChevronDown, Zap, Palette, Code, Rocket, Shield, HeadphonesIcon } from 'lucide-react'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Check, X, ChevronDown, ChevronUp, Zap, Palette, Code, Rocket, Shield, HeadphonesIcon } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useTheme } from 'next-themes'
 
-const plans = [
+const tiers = [
   {
     name: "Basic",
-    price: "Starting at $1,000",
     description: "Perfect for small businesses and startups",
+    category: "Website",
     features: [
       { name: "Responsive WordPress or CMS website", included: true },
       { name: "SEO optimization", included: true },
@@ -28,8 +29,8 @@ const plans = [
   },
   {
     name: "Professional",
-    price: "Starting at $5,000",
     description: "Ideal for growing businesses",
+    category: "Website",
     features: [
       { name: "Custom web application", included: true },
       { name: "Advanced SEO and performance optimization", included: true },
@@ -44,9 +45,26 @@ const plans = [
     ]
   },
   {
+    name: "Shopify Store Setup",
+    description: "Ideal for businesses looking to start selling online",
+    category: "E-commerce",
+    features: [
+      { name: "Custom theme selection and customization", included: true },
+      { name: "Product catalog setup (up to 100 products)", included: true },
+      { name: "Payment gateway integration", included: true },
+      { name: "Basic SEO optimization", included: true },
+      { name: "Automated email notifications", included: true },
+      { name: "Social media integration", included: true },
+      { name: "One-time training session", included: true },
+      { name: "60-day post-launch support", included: true },
+      { name: "Custom web application development", included: false },
+      { name: "Advanced analytics and reporting", included: false },
+    ]
+  },
+  {
     name: "Custom Enterprise Solution",
-    price: "Prices will vary",
     description: "Tailored solutions for large organizations",
+    category: "E-commerce",
     features: [
       { name: "Fully customized web application", included: true },
       { name: "Scalable architecture", included: true },
@@ -121,38 +139,27 @@ const additionalFeatures = [
 ]
 
 export default function PricingPage() {
-  const [isVisible, setIsVisible] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [expandedCards, setExpandedCards] = useState<string[]>([])
   const { theme } = useTheme()
 
-  useEffect(() => {
-    setIsVisible(true)
-  }, [])
+  const filteredTiers = selectedCategory === 'All' 
+    ? tiers 
+    : tiers.filter(tier => tier.category === selectedCategory)
 
-  const fadeInUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+  const toggleExpand = (tierName: string) => {
+    setExpandedCards(prev => 
+      prev.includes(tierName) 
+        ? prev.filter(name => name !== tierName)
+        : [...prev, tierName]
+    )
   }
 
   return (
-    <div className="relative w-full min-h-screen bg-white dark:bg-gradient-to-br dark:from-black dark:via-yellow-900 dark:to-black transition-colors duration-500">
-      <div className="absolute inset-0 w-full h-full">
-        <div className="absolute inset-0 w-full h-full opacity-50 bg-white dark:bg-gradient-to-br dark:from-black dark:via-yellow-900 dark:to-black dark:animate-gradient-x"></div>
-      </div>
-      <motion.div 
-        className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMjggMGEyOCAyOCAwIDEgMCA1NiAwYTI4IDI4IDAgMSAwLTU2IDB6IiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4xIi8+PC9zdmc+')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMjggMGEyOCAyOCAwIDEgMCA1NiAwYTI4IDI4IDAgMSAwLTU2IDB6IiBzdHJva2U9IiNmZmQ3MDAiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4zIi8+PC9zdmc>')]"
-        animate={{
-          backgroundPosition: ['0% 0%', '100% 100%'],
-          transition: {
-            duration: 20,
-            ease: "linear",
-            repeat: Infinity,
-            repeatType: "reverse"
-          }
-        }}
-      />
-      <div className="relative z-10 container mx-auto px-4 py-16">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-black transition-colors duration-500">
+      <div className="container mx-auto px-4 py-16">
         <motion.h1 
-          className="text-5xl font-extrabold text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-yellow-600 to-yellow-800 dark:from-yellow-400 dark:to-yellow-600"
+          className="text-5xl font-extrabold text-center mb-4 bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-yellow-500 dark:from-amber-200 dark:to-yellow-400"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -168,44 +175,75 @@ export default function PricingPage() {
           Tailored packages to elevate your online presence
         </motion.p>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
-          {plans.map((plan, index) => (
+        <Tabs defaultValue="All" className="w-full max-w-md mx-auto mb-12">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="All" onClick={() => setSelectedCategory('All')}>All</TabsTrigger>
+            <TabsTrigger value="Website" onClick={() => setSelectedCategory('Website')}>Website</TabsTrigger>
+            <TabsTrigger value="E-commerce" onClick={() => setSelectedCategory('E-commerce')}>E-commerce</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-24">
+          {filteredTiers.map((tier, index) => (
             <motion.div
-              key={plan.name}
+              key={tier.name}
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="flex flex-col h-full bg-white dark:bg-gray-800 border-yellow-600 dark:border-yellow-400">
+              <Card className="flex flex-col h-full">
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{plan.name}</CardTitle>
-                  <CardDescription className="text-3xl font-semibold text-gray-900 dark:text-white">
-                    {plan.price}
-                  </CardDescription>
+                  <CardTitle className="text-2xl font-bold text-amber-600 dark:text-amber-400">{tier.name}</CardTitle>
+                  <CardDescription>{tier.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <p className="text-gray-700 dark:text-gray-300 mb-4">{plan.description}</p>
-                  <ul className="space-y-2">
-                    {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center">
-                        {feature.included ? (
-                          <Check className="w-5 h-5 mr-2 text-green-500 flex-shrink-0" />
-                        ) : (
-                          <X className="w-5 h-5 mr-2 text-red-500 flex-shrink-0" />
-                        )}
-                        <span className={`${feature.included ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 line-through'}`}>{feature.name}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <Button
+                    variant="outline"
+                    onClick={() => toggleExpand(tier.name)}
+                    className="w-full mb-4"
+                  >
+                    {expandedCards.includes(tier.name) ? 'Hide Features' : 'View Features'}
+                    {expandedCards.includes(tier.name) ? <ChevronUp className="ml-2 h-4 w-4" /> : <ChevronDown className="ml-2 h-4 w-4" />}
+                  </Button>
+                  <AnimatePresence>
+                    {expandedCards.includes(tier.name) && (
+                      <motion.ul
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="space-y-2"
+                      >
+                        {tier.features.map((feature, featureIndex) => (
+                          <motion.li
+                            key={featureIndex}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.5, delay: featureIndex * 0.05 }}
+                            className="flex items-start space-x-2"
+                          >
+                            {feature.included ? (
+                              <Check className="w-5 h-5 text-green-500 dark:text-green-400 flex-shrink-0" />
+                            ) : (
+                              <X className="w-5 h-5 text-red-500 dark:text-red-400 flex-shrink-0" />
+                            )}
+                            <span className={`text-sm ${feature.included ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500 line-through'}`}>
+                              {feature.name}
+                            </span>
+                          </motion.li>
+                        ))}
+                      </motion.ul>
+                    )}
+                  </AnimatePresence>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-white dark:text-black">
-                    {index === 2 ? 'Contact Us' : 'Get Started'}
+                  <Button className="w-full bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600 text-white dark:text-black">
+                    {index === 3 ? 'Contact Us' : 'Get Started'}
                     <Zap className="w-4 h-4 ml-2" />
                   </Button>
                 </CardFooter>
                 {index === 1 && (
-                  <Badge className="absolute top-4 right-4 bg-gradient-to-r from-yellow-600 to-yellow-800 dark:from-yellow-400 dark:to-yellow-600 text-white dark:text-black">
+                  <Badge className="absolute top-4 right-4 bg-black text-amber-400 dark:bg-amber-400 dark:text-black">
                     Popular
                   </Badge>
                 )}
@@ -215,7 +253,7 @@ export default function PricingPage() {
         </div>
 
         <motion.h2 
-          className="text-4xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-yellow-600 to-yellow-800 dark:from-yellow-400 dark:to-yellow-600"
+          className="text-4xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-yellow-500 dark:from-amber-200 dark:to-yellow-400"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -230,19 +268,21 @@ export default function PricingPage() {
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           {additionalFeatures.map((category, index) => (
-            <Card key={index} className="flex flex-col h-full bg-white dark:bg-gray-800 border-yellow-600 dark:border-yellow-400">
+            <Card key={index} className="flex flex-col h-full">
               <CardHeader>
                 <div className="flex items-center space-x-2">
-                  <category.icon className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
-                  <CardTitle className="text-yellow-600 dark:text-yellow-400">{category.category}</CardTitle>
+                  <div className="p-2 bg-amber-100 dark:bg-amber-900 rounded-full">
+                    <category.icon className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                  </div>
+                  <CardTitle className="text-xl font-semibold text-amber-700 dark:text-amber-300">{category.category}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
                   {category.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center">
-                      <Check className="w-5 h-5 mr-2 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-700 dark:text-gray-300">{feature}</span>
+                      <Check className="w-5 h-5 mr-2 text-green-500 dark:text-green-400 flex-shrink-0" />
+                      <span className="text-sm text-gray-700 dark:text-gray-300">{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -259,30 +299,12 @@ export default function PricingPage() {
         >
           <h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Ready to Transform Your Web Presence?</h2>
           <p className="text-xl text-gray-700 dark:text-gray-300 mb-8">Let's discuss how we can tailor our solutions to meet your unique business needs.</p>
-          <Button className="bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-white dark:text-black text-lg px-8 py-4 rounded-full">
+          <Button className="bg-amber-600 hover:bg-amber-700 dark:bg-amber-500 dark:hover:bg-amber-600 text-white dark:text-black text-lg px-8 py-4 rounded-full">
             Schedule a Consultation
             <ChevronDown className="w-5 h-5 ml-2" />
           </Button>
         </motion.div>
       </div>
-      <style jsx global>{`
-        @keyframes gradient-x {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        
-        }
-        .animate-gradient-x {
-          animation: gradient-x 15s ease infinite;
-          background-size: 400% 400%;
-        }
-      `}</style>
     </div>
   )
 }

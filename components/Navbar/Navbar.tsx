@@ -27,14 +27,26 @@ const portfolioItems = [
 export default function Navbar() {
   const { setTheme, theme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
 
   useEffect(() => {
     setMounted(true)
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const bgClass = isScrolled
+    ? 'bg-[#f5f5f5]/80 backdrop-blur-sm dark:bg-black-light/80'
+    : 'bg-[#f5f5f5] dark:bg-black-light'
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className={`sticky top-0 z-50 w-full border-b border-gray-200 text-gray-800 dark:border-gold-light dark:text-gold-light transition-colors duration-300 ${bgClass}`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
         <div className="flex h-16 items-center justify-between">
           <div className="flex-1 flex items-center justify-start">
@@ -47,17 +59,17 @@ export default function Navbar() {
             <NavLink href="/about" active={pathname === "/about"}>About</NavLink>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant={pathname.startsWith("/services") ? "default" : "ghost"} className="text-sm font-medium">
+                <Button variant={pathname.startsWith("/services") ? "default" : "ghost"} className="text-sm font-medium hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gold-dark dark:hover:text-black-light">
                   Services <ChevronDown className="ml-1 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuContent align="end" className="w-48 bg-[#f5f5f5] text-gray-800 dark:bg-black-light dark:text-gold-light">
                 <DropdownMenuItem asChild>
                   <Link href="/services" className="w-full font-medium">
                     All Services
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-gray-200 dark:bg-gold-light" />
                 {services.map((service) => (
                   <DropdownMenuItem key={service.href} asChild>
                     <Link href={service.href} className="w-full">
@@ -70,11 +82,11 @@ export default function Navbar() {
             <NavLink href="/pricing" active={pathname === "/pricing"}>Pricing</NavLink>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant={pathname.startsWith("/portfolio") ? "default" : "ghost"} className="text-sm font-medium">
+                <Button variant={pathname.startsWith("/portfolio") ? "default" : "ghost"} className="text-sm font-medium hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gold-dark dark:hover:text-black-light">
                   Portfolio <ChevronDown className="ml-1 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuContent align="end" className="w-64 bg-[#f5f5f5] text-gray-800 dark:bg-black-light dark:text-gold-light">
                 {portfolioItems.map((item) => (
                   <DropdownMenuItem key={item.href} asChild>
                     <Link href={item.href} className="w-full">
@@ -92,7 +104,7 @@ export default function Navbar() {
                 variant="ghost"
                 size="icon"
                 aria-label="Toggle theme"
-                className="w-9 px-0"
+                className="w-9 px-0 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gold-dark dark:hover:text-black-light"
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               >
                 <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -102,12 +114,12 @@ export default function Navbar() {
             )}
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
+                <Button variant="ghost" size="icon" className="md:hidden hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gold-dark dark:hover:text-black-light">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right">
+              <SheetContent side="right" className="bg-[#f5f5f5] text-gray-800 dark:bg-black-light dark:text-gold-light">
                 <nav className="flex flex-col space-y-4 mt-4">
                   <NavLink href="/" mobile active={pathname === "/"}>Home</NavLink>
                   <NavLink href="/about" mobile active={pathname === "/about"}>About</NavLink>
@@ -147,8 +159,8 @@ function NavLink({ href, children, mobile = false, active = false }: { href: str
         variant={active ? "default" : "ghost"}
         className={`${
           mobile ? 'justify-start w-full text-lg' : 'text-sm'
-        } font-medium transition-colors hover:text-primary focus:text-primary focus:bg-accent focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
-          active ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''
+        } font-medium transition-colors hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gold-dark dark:hover:text-black-light focus:bg-gray-200 focus:text-gray-900 dark:focus:bg-gold-dark dark:focus:text-black-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300 dark:focus:ring-gold-dark ${
+          active ? 'bg-gray-200 text-gray-900 dark:bg-gold-dark dark:text-black-light' : 'text-gray-800 dark:text-gold-light'
         }`}
       >
         {children}
