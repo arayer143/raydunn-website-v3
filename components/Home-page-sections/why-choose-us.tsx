@@ -10,10 +10,10 @@ export default function WhyChooseUsSection() {
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 })
 
   return (
-    <section ref={sectionRef} className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
+    <section ref={sectionRef} className="w-full py-12 md:py-24 lg:py-32 bg-secondary-100 dark:bg-secondary-900">
       <div className="container mx-auto px-4 md:px-6 max-w-5xl">
         <motion.h2 
-          className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12 text-gray-800 dark:text-gray-100"
+          className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-12 text-secondary-900 dark:text-secondary-50"
           initial={{ opacity: 0, y: -20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
           transition={{ duration: 0.8 }}
@@ -27,21 +27,21 @@ export default function WhyChooseUsSection() {
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <ReasonCard
-            icon={<Zap className="h-12 w-12 mb-4 text-gray-600 dark:text-gray-300" />}
+            icon={<Zap className="h-12 w-12 mb-4 text-accent-600 dark:text-accent-400" />}
             title="Fast & Efficient"
             description="We deliver high-performance websites that load quickly and run smoothly."
             delay={0}
             isInView={isInView}
           />
           <ReasonCard
-            icon={<Shield className="h-12 w-12 mb-4 text-gray-600 dark:text-gray-300" />}
+            icon={<Shield className="h-12 w-12 mb-4 text-accent-600 dark:text-accent-400" />}
             title="Secure & Reliable"
             description="Our solutions prioritize your data security and ensure consistent uptime."
             delay={0.2}
             isInView={isInView}
           />
           <ReasonCard
-            icon={<Users className="h-12 w-12 mb-4 text-gray-600 dark:text-gray-300" />}
+            icon={<Users className="h-12 w-12 mb-4 text-accent-600 dark:text-accent-400" />}
             title="Client-Focused Approach"
             description="We work closely with you to understand and meet your specific needs."
             delay={0.4}
@@ -62,7 +62,7 @@ function ReasonCard({ icon, title, description, delay, isInView }: { icon: React
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
-      <Card className="w-full max-w-sm bg-white dark:bg-gray-700 shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out border border-gray-200 dark:border-gray-600">
+      <Card className="w-full max-w-sm bg-secondary-50 dark:bg-secondary-800 shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out border border-secondary-200 dark:border-secondary-700">
         <CardHeader className="flex flex-col items-center pt-6">
           <motion.div
             initial={{ scale: 0 }}
@@ -71,10 +71,10 @@ function ReasonCard({ icon, title, description, delay, isInView }: { icon: React
           >
             {icon}
           </motion.div>
-          <CardTitle className="text-xl font-bold text-center mb-2 text-gray-800 dark:text-gray-100">{title}</CardTitle>
+          <CardTitle className="text-xl font-bold text-center mb-2 text-secondary-900 dark:text-secondary-50">{title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-center text-gray-600 dark:text-gray-300">{description}</p>
+          <p className="text-center text-secondary-700 dark:text-secondary-300">{description}</p>
         </CardContent>
       </Card>
     </motion.div>

@@ -1,6 +1,6 @@
 
 import ContactSection from "./contact-section";
-import WhyChooseUsSection from "@/components/Services-sections/why-choose-us";
+import WhyChooseUsSection from "@/components/Home-page-sections/why-choose-us";
 import OurServicesSection from "@/components/Home-page-sections/our-services"
 import TechnologiesSection from "@/components/Home-page-sections/technologies-section";
 import CTASection from "@/components/Call-to-action/cta-section";

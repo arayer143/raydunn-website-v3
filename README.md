@@ -28,8 +28,6 @@ This project is a modern, responsive website for RayDunn Web Solutions, built us
 ### Theming
 - **next-themes**: A library for adding theme support to Next.js applications.
 
-### Email Functionality
-- **@react-email/components**: React components for building emails.
 
 ### Development Tools
 - **ESLint**: A tool for identifying and reporting on patterns in JavaScript/TypeScript.

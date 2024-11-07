@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { motion } from 'framer-motion'
 import { useEffect, useState, useRef } from 'react'
 import { Phone, Mail } from 'lucide-react'
-import IntroSection from '../Intro-Section/intro-section'
+import IntroSection from '../Home-page-sections/intro-section'
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false)
