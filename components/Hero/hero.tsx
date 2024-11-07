@@ -37,9 +37,9 @@ export default function Hero() {
 
   return (
     <>
-      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-black text-gold-100 transition-colors duration-500">
+      <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-indigo-950 transition-colors duration-500">
         <motion.div 
-          className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMjggMGEyOCAyOCAwIDEgMCA1NiAwYTI4IDI4IDAgMSAwLTU2IDB6IiBzdHJva2U9IiNkNGFmMzciIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4zIi8+PC9zdmc+')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMjggMGEyOCAyOCAwIDEgMCA1NiAwYTI4IDI4IDAgMSAwLTU2IDB6IiBzdHJva2U9IiNmZmQ3MDAiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4zIi8+PC9zdmc+')]"
+          className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMjggMGEyOCAyOCAwIDEgMCA1NiAwYTI4IDI4IDAgMSAwLTU2IDB6IiBzdHJva2U9IiM5M2MzZWUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4zIi8+PC9zdmc+')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMjggMGEyOCAyOCAwIDEgMCA1NiAwYTI4IDI4IDAgMSAwLTU2IDB6IiBzdHJva2U9IiM2MzY2ZjEiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4zIi8+PC9zdmc+')]"
           animate={{
             backgroundPosition: ['0% 0%', '100% 100%'],
             transition: {
@@ -53,7 +53,7 @@ export default function Hero() {
         {[...Array(30)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-gold-400 rounded-full"
+            className="absolute w-1 h-1 bg-blue-400 dark:bg-indigo-400 rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `-5%`,
@@ -84,14 +84,14 @@ export default function Hero() {
               variants={fadeInUp}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight max-w-5xl"
             >
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-gold-400 via-gold-500 to-gold-600">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-300 dark:via-indigo-300 dark:to-purple-300">
                 Better Solutions
               </span>{" "}
-              <span className="text-gold-100">For Your Business</span>
+              <span className="text-gray-900 dark:text-white">For Your Business</span>
             </motion.h1>
             <motion.p 
               variants={fadeInUp}
-              className="text-xl sm:text-2xl text-gold-200 max-w-2xl mx-auto"
+              className="text-xl sm:text-2xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto"
             >
               We create stunning, high-performance websites that drive results for your business.
             </motion.p>
@@ -104,7 +104,7 @@ export default function Hero() {
                 whileTap="tap"
                 variants={buttonVariants}
               >
-                <Button asChild size="lg" className="relative bg-gold-600 hover:bg-gold-700 text-black px-8 py-4 rounded-full transition-colors duration-300 ease-in-out shadow-lg">
+                <Button asChild size="lg" className="relative bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white px-8 py-4 rounded-full transition-colors duration-300 ease-in-out shadow-lg">
                   <Link href="tel:5046502562" className="flex items-center space-x-2">
                     <Phone size={20} />
                     <span>Call Us</span>
@@ -116,7 +116,7 @@ export default function Hero() {
                 whileTap="tap"
                 variants={buttonVariants}
               >
-                <Button asChild size="lg" className="relative bg-black hover:bg-gray-900 text-gold-400 border-2 border-gold-400 px-8 py-4 rounded-full transition-colors duration-300 ease-in-out shadow-lg">
+                <Button asChild size="lg" className="relative bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-400 text-white px-8 py-4 rounded-full transition-colors duration-300 ease-in-out shadow-lg">
                   <Link href="mailto:contact@raydunnsolutions.com" className="flex items-center space-x-2">
                     <Mail size={20} />
                     <span>Email Us</span>
@@ -134,16 +134,16 @@ export default function Hero() {
         >
           <button
             onClick={scrollToNextSection}
-            className="focus:outline-none focus:ring-2 focus:ring-gold-400 focus:ring-opacity-50 rounded-full p-2"
+            className="focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded-full p-2"
             aria-label="Scroll to next section"
           >
-            <svg className="w-8 h-8 text-gold-400 animate-bounce" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-8 h-8 text-blue-600 dark:text-indigo-400 animate-bounce" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
               <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
             </svg>
           </button>
         </motion.div>
       </section>
-      <div ref={nextSectionRef} className="w-full bg-black">
+      <div ref={nextSectionRef} className="w-full bg-gray-100 dark:bg-gray-800">
         <IntroSection />
       </div>
     </>
