@@ -24,6 +24,13 @@ const portfolioItems = [
   { name: "OutKast Industrial Group", href: "/portfolio/outkast" },
 ]
 
+const pricingTiers = [
+  { name: "Basic", href: "/pricing/basic" },
+  { name: "Standard", href: "/pricing/standard" },
+  { name: "Premium", href: "/pricing/premium" },
+  { name: "Enterprise", href: "/pricing/enterprise" },
+]
+
 export default function Navbar() {
   const { setTheme, theme } = useTheme()
   const [mounted, setMounted] = useState(false)
@@ -83,6 +90,22 @@ export default function Navbar() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant={pathname.startsWith("/pricing") ? "default" : "ghost"} className="text-sm font-medium">
+                  Pricing<ChevronDown className="ml-1 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                {pricingTiers.map((tier) => (
+                  <DropdownMenuItem key={tier.href} asChild>
+                    <Link href={tier.href} className="w-full">
+                      {tier.name}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
             <NavLink href="/contact" active={pathname === "/contact"}>Contact</NavLink>
           </nav>
           <div className="flex-1 flex items-center justify-end space-x-4">
@@ -124,6 +147,14 @@ export default function Navbar() {
                     {portfolioItems.map((item) => (
                       <NavLink key={item.href} href={item.href} mobile active={pathname === item.href}>
                         {item.name}
+                      </NavLink>
+                    ))}
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="font-medium text-lg">Pricing</h3>
+                    {pricingTiers.map((tier) => (
+                      <NavLink key={tier.href} href={tier.href} mobile active={pathname === tier.href}>
+                        {tier.name}
                       </NavLink>
                     ))}
                   </div>

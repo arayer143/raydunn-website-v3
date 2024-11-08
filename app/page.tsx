@@ -10,6 +10,8 @@ import Hero from "@/components/Hero/hero";
 import Footer from "@/components/Footer/footer";
 import Navbar from "@/components/Navbar/Navbar";
 
+import PricingSection from "@/components/Home-page-sections/pricing-section";
+
 
 export default function Home() {
   return (
@@ -26,6 +28,7 @@ export default function Home() {
         <OurServicesSection />
         <WhyChooseUsSection />
         <TechnologiesSection />
+        <PricingSection/>
         
         <PortfolioPage />
         <CTASection />
