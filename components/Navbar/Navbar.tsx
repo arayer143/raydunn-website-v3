@@ -25,6 +25,7 @@ const portfolioItems = [
 ]
 
 const pricingTiers = [
+  { name: "All tiers", href: "/pricing" },
   { name: "Basic", href: "/pricing/basic" },
   { name: "Standard", href: "/pricing/standard" },
   { name: "Premium", href: "/pricing/premium" },
@@ -97,6 +98,12 @@ export default function Navbar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem asChild>
+                  <Link href="/services" className="w-full font-medium">
+                    Pricing Page
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 {pricingTiers.map((tier) => (
                   <DropdownMenuItem key={tier.href} asChild>
                     <Link href={tier.href} className="w-full">

@@ -1,243 +1,326 @@
 "use client"
 
-import React from "react"
+import { useState } from "react"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { Check, X, Palette, Code, Rocket, Shield, Headphones, ChevronDown, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Code, Globe, Laptop, Palette, Server, Smartphone, Zap, Shield, Users, CheckCircle } from "lucide-react"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { Separator } from "@/components/ui/separator"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@radix-ui/react-accordion"
 
+const pricingPlans = [
+  {
+    name: "Basic Website",
+    description: "Perfect for small businesses and personal websites",
+    designPrice: 1500,
+    monthlyPrice: 100,
+    annualPrice: 1020,
+    popular: false,
+    features: [
+      "Responsive design",
+      "Up to 5 pages",
+      "Basic SEO optimization",
+      "Contact form",
+      "Social media integration",
+      "1 month of support",
+      "Basic performance optimization",
+      { text: "Progressive Web App (PWA) functionality", available: false },
+      { text: "API integration", available: false },
+      { text: "Advanced animations and interactions", available: false },
+      { text: "A/B testing setup", available: false },
+    ],
+  },
+  {
+    name: "Professional Website",
+    description: "Ideal for growing businesses and organizations",
+    designPrice: 3000,
+    monthlyPrice: 250,
+    annualPrice: 2550,
+    popular: true,
+    features: [
+      "All Basic Website features",
+      "Up to 10 pages",
+      "Advanced SEO optimization",
+      "Custom animations",
+      "Blog integration",
+      "Google Analytics setup",
+      "3 months of support",
+      "Advanced performance optimization",
+      "Progressive Web App (PWA) functionality",
+      "API integration",
+      "Advanced animations and interactions",
+      "A/B testing setup",
+      "Accessibility compliance (WCAG 2.1)",
+      "Integration with headless CMS",
+    ],
+  },
+  {
+    name: "Basic E-commerce",
+    description: "Start selling online with essential features",
+    designPrice: 3000,
+    monthlyPrice: 200,
+    annualPrice: 2040,
+    popular: false,
+    features: [
+      "Up to 50 products",
+      "Responsive design",
+      "Basic SEO optimization",
+      "Secure payment gateway",
+      "Order management",
+      "Customer accounts",
+      "1 month of support",
+      "Basic inventory management",
+      { text: "AI-powered product recommendations", available: false },
+      { text: "Multi-currency support", available: false },
+      { text: "Advanced analytics and reporting", available: false },
+    ],
+  },
+  {
+    name: "Professional E-commerce",
+    description: "Scale your online business with advanced features",
+    designPrice: 5000,
+    monthlyPrice: 500,
+    annualPrice: 5100,
+    popular: false,
+    features: [
+      "All Basic E-commerce features",
+      "Unlimited products",
+      "Advanced SEO optimization",
+      "Multiple payment gateways",
+      "Advanced inventory management",
+      "Abandoned cart recovery",
+      "Product reviews and ratings",
+      "3 months of support",
+      "AI-powered product recommendations",
+      "Multi-currency support",
+      "Advanced analytics and reporting",
+      "Integration with ERP systems",
+      "Subscription and recurring billing",
+      "Augmented Reality (AR) product previews",
+    ],
+  },
+]
 
-const fadeUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 }
-}
+const additionalFeatures = [
+  {
+    category: "Design and User Experience",
+    icon: Palette,
+    features: [
+      "Custom UI/UX design tailored to your brand",
+      "Responsive design for all devices and screen sizes",
+      "Accessibility compliance (WCAG 2.1)",
+      "User journey mapping and optimization",
+      "Interactive prototyping for stakeholder approval"
+    ]
+  },
+  {
+    category: "Development and Technology",
+    icon: Code,
+    features: [
+      "React & Next.js for dynamic, server-side rendered applications",
+      "GraphQL for efficient data loading and improved performance",
+      "Progressive Web Apps (PWAs) for native app-like experience",
+      "Serverless architecture for reduced infrastructure costs",
+      "Microservices architecture for scalability and maintainability"
+    ]
+  },
+  {
+    category: "Performance and Optimization",
+    icon: Rocket,
+    features: [
+      "Lazy loading and code splitting for faster load times",
+      "Image and asset optimization",
+      "Content Delivery Network (CDN) integration",
+      "Database query optimization",
+      "Caching strategies (browser, CDN, and server-side)"
+    ]
+  },
+  {
+    category: "Security and Compliance",
+    icon: Shield,
+    features: [
+      "SSL/TLS encryption for all data transmissions",
+      "Regular security audits and penetration testing",
+      "GDPR, CCPA, and other privacy regulation compliance",
+      "Two-factor authentication (2FA) implementation",
+      "Web application firewall (WAF) integration"
+    ]
+  },
+  {
+    category: "Support and Maintenance",
+    icon: Headphones,
+    features: [
+      "24/7 monitoring and incident response",
+      "Regular software updates and patch management",
+      "Backup and disaster recovery solutions",
+      "Performance monitoring and optimization",
+      "Dedicated support team with SLA guarantees"
+    ]
+  }
+]
 
-export default function ServicesPage() {
-  const services = [
-    {
-      icon: <Globe className="h-8 w-8" />,
-      title: "Web Design",
-      description: "Create stunning, responsive websites that captivate your audience and drive engagement."
-    },
-    {
-      icon: <Code className="h-8 w-8" />,
-      title: "Front-end Development",
-      description: "Build interactive and dynamic user interfaces using the latest web technologies."
-    },
-    {
-      icon: <Server className="h-8 w-8" />,
-      title: "Back-end Development",
-      description: "Develop robust server-side applications and APIs to power your web solutions."
-    },
+export default function PricingPage() {
+  const [isAnnual, setIsAnnual] = useState(false)
 
-    {
-      icon: <Palette className="h-8 w-8" />,
-      title: "UI/UX Design",
-      description: "Craft intuitive and visually appealing user experiences that delight your customers."
-    },
-    {
-      icon: <Laptop className="h-8 w-8" />,
-      title: "E-commerce Solutions",
-      description: "Build secure and scalable online stores that drive sales and grow your business."
-    }
-  ]
-
-
-
-  const reasons = [
-    {
-      icon: <Users className="h-8 w-8 text-primary" />,
-      title: "Experienced Team",
-      description: "Our skilled developers bring years of experience and expertise to every project, ensuring high-quality solutions tailored to your needs."
-    },
-    {
-      icon: <Zap className="h-8 w-8 text-primary" />,
-      title: "Cutting-Edge Technology",
-      description: "We stay up-to-date with the latest trends and best practices in web development, ensuring your project is built with the future in mind."
-    },
-    {
-      icon: <Shield className="h-8 w-8 text-primary" />,
-      title: "Ongoing Support",
-      description: "We provide continuous support and maintenance for your web solutions, ensuring they remain secure, up-to-date, and performing optimally."
-    },
-    {
-      icon: <Globe className="h-8 w-8 text-primary" />,
-      title: "Custom Solutions",
-      description: "We create tailored web solutions that align perfectly with your business goals, ensuring maximum impact and ROI for your digital presence."
-    }
-  ]
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
 
 
   return (
-    <div className="min-h-screen ">
-    <header className="relative bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-indigo-950 py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      <motion.div 
-        className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMjggMGEyOCAyOCAwIDEgMCA1NiAwYTI4IDI4IDAgMSAwLTU2IDB6IiBzdHJva2U9IiM5M2MzZWUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4zIi8+PC9zdmc+')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCI+PHBhdGggZD0iTTAgMGg2MHY2MEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zMCAzMG0tMjggMGEyOCAyOCAwIDEgMCA1NiAwYTI4IDI4IDAgMSAwLTU2IDB6IiBzdHJva2U9IiM2MzY2ZjEiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgb3BhY2l0eT0iMC4zIi8+PC9zdmc+')]"
-        animate={{
-          backgroundPosition: ['0% 0%', '100% 100%'],
-          transition: {
-            duration: 20,
-            ease: "linear",
-            repeat: Infinity,
-            repeatType: "reverse"
-          }
-        }}
-      />
-      <div className="container mx-auto max-w-6xl relative z-10">
-        <motion.div 
-          className="text-center"
-          initial="initial"
-          animate="animate"
-          variants={fadeUp}
-        >
-          <h1 className="text-4xl font-bold mb-4 text-blue-600 dark:text-blue-300">Our Web Development Services</h1>
-          <p className="max-w-2xl mx-auto text-lg text-gray-700 dark:text-gray-200">
-            We offer a comprehensive range of web development services to help your business thrive in the digital world.
-          </p>
-        </motion.div>
-      </div>
-    </header>
-
-      <main className="space-y-20 py-16">
-        <section className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="text-3xl font-bold text-center mb-12">Our Core Services</h2>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {services.map((service, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <Card className="h-full transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1">
-                    <CardHeader>
-                      <div className="flex items-center justify-center bg-primary/10 rounded-full p-3 w-16 h-16 mx-auto mb-4">
-                        <div className="text-primary">
-                          {service.icon}
-                        </div>
-                      </div>
-                      <CardTitle className="text-xl text-center">{service.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-center text-muted-foreground">{service.description}</p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </section>
-
-        <Separator className="max-w-4xl mx-auto" />
-
-        <section className="bg-secondary/30 py-16">
-          <div className="container mx-auto px-4 text-center space-y-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+    <div className="container mx-auto px-4 py-16">
+      <h1 className="text-4xl font-bold text-center mb-16">Pricing & Features</h1>
+      
+      {/* Pricing Section */}
+      <section className="mb-24">
+        <h2 className="text-3xl font-bold text-center mb-8">Our Pricing Plans</h2>
+        <div className="flex items-center justify-center mb-8">
+          <Label htmlFor="pricing-toggle" className="mr-2">Monthly</Label>
+          <Switch
+            id="pricing-toggle"
+            checked={isAnnual}
+            onCheckedChange={setIsAnnual}
+          />
+          <Label htmlFor="pricing-toggle" className="ml-2">Annual (Save 15%)</Label>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {pricingPlans.map((plan, index) => (
+            <Card 
+              key={index} 
+              className="flex flex-col relative overflow-hidden transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl"
             >
-              <h2 className="text-3xl font-bold mb-4">Our Approach</h2>
-              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-                At RayDunn Web Solutions, we believe in a collaborative and transparent approach to web development. 
-                We work closely with our clients at every stage of the project to ensure we deliver solutions that 
-                not only meet but exceed expectations.
-              </p>
-              <div className="grid md:grid-cols-3 gap-8 mt-12">
-                {[
-                  { icon: <Zap className="h-8 w-8" />, title: "Agile Development", description: "We use agile methodologies to ensure flexibility and rapid delivery." },
-                  { icon: <Shield className="h-8 w-8" />, title: "Security First", description: "We prioritize the security of your data and applications at every step." },
-                  { icon: <Users className="h-8 w-8" />, title: "User-Centric", description: "We focus on creating intuitive and accessible user experiences." },
-                ].map((item, index) => (
-                  <motion.div 
-                    key={index} 
-                    className="flex flex-col items-center"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <div className="bg-primary/20 rounded-full p-3 mb-4">
-                      <div className="text-primary">{item.icon}</div>
-                    </div>
-                    <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                    <p className="text-muted-foreground">{item.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </section>
+              {plan.popular && (
+                <Badge className="absolute top-0 right-0 m-2" variant="secondary">
+                  Popular
+                </Badge>
+              )}
+              <CardHeader>
+                <CardTitle>{plan.name}</CardTitle>
+                <CardDescription>{plan.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="flex-grow">
+                <div className="mb-6 p-4 bg-primary/5 rounded-lg">
+                  <div className="text-2xl font-bold text-primary">
+                    Starting at ${plan.designPrice}
+                  </div>
+                  <div className="text-sm font-medium">One-time design fee</div>
+                </div>
+                <div className="mb-6">
+                  <div className="text-3xl font-bold">
+                    ${isAnnual ? plan.annualPrice : plan.monthlyPrice}
+                    <span className="text-sm font-normal text-muted-foreground"> / {isAnnual ? 'year' : 'month'}</span>
+                  </div>
+                  <div className="text-sm text-muted-foreground">Ongoing maintenance & support</div>
+                </div>
+                <ul className="space-y-2">
+                  {plan.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-center">
+                      {typeof feature === 'string' ? (
+                        <>
+                          <Check className="h-5 w-5 text-primary mr-2 flex-shrink-0" />
+                          <span>{feature}</span>
+                        </>
+                      ) : (
+                        <>
+                          {feature.available ? (
+                            <Check className="h-5 w-5 text-primary mr-2 flex-shrink-0" />
+                          ) : (
+                            <X className="h-5 w-5 text-muted-foreground mr-2 flex-shrink-0" />
+                          )}
+                          <span className={feature.available ? '' : 'line-through text-muted-foreground'}>
+                            {feature.text}
+                          </span>
+                        </>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
 
-        <Separator className="max-w-4xl mx-auto" />
-
-        <section className="w-full bg-gradient-to-b from-background to-secondary/20 py-16">
+      {/* Additional Features Section */}
+      <section className="py-16 bg-gradient-to-b from-background to-secondary/20">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h2 className="text-3xl font-bold text-center mb-12 text-primary">Why Choose RayDunn Web Solutions?</h2>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 max-w-5xl mx-auto">
-            {reasons.map((reason, index) => (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="flex justify-center"
-              >
-                <Card className="h-full w-full max-w-md transition-all duration-300 ease-in-out hover:shadow-lg hover:-translate-y-1">
-                  <CardHeader className="flex flex-col items-center text-center pb-2">
-                    <div className="bg-primary/10 rounded-full p-3 mb-4">
-                      {reason.icon}
-                    </div>
-                    <CardTitle className="text-xl">{reason.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-center">
-                    <p className="text-muted-foreground">{reason.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-          <motion.div 
-            className="mt-12 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <Button asChild size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
-              <Link href="/contact">Start Your Project</Link>
-            </Button>
-          </motion.div>
-        </motion.div>
+        <h2 className="text-3xl font-bold text-center mb-8">Additional Features</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {additionalFeatures.map((category, index) => (
+            <Card key={index} className="flex flex-col">
+              <CardHeader>
+                <CardTitle className="flex items-center text-xl">
+                  <category.icon className="w-6 h-6 mr-2 text-primary" />
+                  {category.category}
+                </CardTitle>
+                <CardDescription>
+                  Enhance your web solution with our {category.category.toLowerCase()} features
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex-grow">
+                <Accordion type="single" collapsible>
+                  <AccordionItem value="features">
+                    <AccordionTrigger>View Features</AccordionTrigger>
+                    <AccordionContent>
+                      <ul className="space-y-2 mt-2">
+                        {category.features.map((feature, featureIndex) => (
+                          <li key={featureIndex} className="flex items-start">
+                            <Badge variant="secondary" className="mt-1 mr-2">
+                              <Check className="h-3 w-3" />
+                            </Badge>
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </CardContent>
+              <div className="p-4 mt-auto">
+                <Button className="w-full" variant="outline">
+                  Learn More
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
     </section>
-
-        <motion.div 
-          className="bg-primary text-primary-foreground rounded-lg p-8 text-center shadow-2xl max-w-4xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <h2 className="text-3xl font-bold mb-4">Ready to Start Your Web Development Project?</h2>
-          <p className="text-lg mb-6 text-primary-foreground/80">
-            Let's discuss how we can bring your vision to life with our expert web development services.
-          </p>
-          <Button asChild size="lg" variant="secondary" className="font-semibold hover:bg-secondary/90">
-            <Link href="/contact">Get in Touch</Link>
-          </Button>
-        </motion.div>
-      </main>
+      {/* Understanding Our Pricing Section */}
+      <section className="mt-24 bg-muted rounded-lg p-8">
+        <h3 className="text-2xl font-bold mb-4">Understanding Our Pricing</h3>
+        <div className="grid md:grid-cols-2 gap-8">
+          <div>
+            <h4 className="text-xl font-semibold mb-2">One-Time Design Fee</h4>
+            <p>The one-time fee covers the initial design and setup of your website or e-commerce platform. This includes custom development, design work, and implementation of features as per your chosen plan.</p>
+          </div>
+          <div>
+            <h4 className="text-xl font-semibold mb-2">Monthly/Annual Fees</h4>
+            <p>The recurring fee covers ongoing services such as hosting, maintenance, security updates, and customer support. Choosing an annual plan provides a 15% discount compared to monthly billing.</p>
+          </div>
+        </div>
+        <div className="mt-8">
+          <h4 className="text-xl font-semibold mb-2">What's Included in Monthly Fees?</h4>
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4">
+            {[
+              "Reliable and fast website hosting",
+              "Regular security updates and patches",
+              "Daily backups of your website",
+              "Ongoing technical support",
+              "Content updates (limits may apply based on your plan)",
+              "Performance optimization",
+              "Access to our client portal for easy communication",
+              "Monthly analytics reports",
+            ].map((item, index) => (
+              <li key={index} className="flex items-center">
+                <Check className="h-5 w-5 text-primary mr-2 flex-shrink-0" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
     </div>
   )
 }

@@ -11,7 +11,7 @@ const pricingPlans = [
   {
     name: "Basic Website",
     description: "Perfect for small businesses and personal websites",
-    designPrice: 1500,
+    designPrice: 1000,
     monthlyPrice: 100,
     annualPrice: 1020,
     popular: false,
