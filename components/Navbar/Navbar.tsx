@@ -25,7 +25,6 @@ const portfolioItems = [
 ]
 
 const pricingTiers = [
-  { name: "All tiers", href: "/pricing" },
   { name: "Basic", href: "/pricing/basic" },
   { name: "Standard", href: "/pricing/standard" },
   { name: "Premium", href: "/pricing/premium" },
