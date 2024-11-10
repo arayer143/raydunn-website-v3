@@ -25,10 +25,10 @@ const portfolioItems = [
 ]
 
 const pricingTiers = [
-  { name: "Basic", href: "/pricing/basic" },
-  { name: "Standard", href: "/pricing/standard" },
-  { name: "Premium", href: "/pricing/premium" },
-  { name: "Enterprise", href: "/pricing/enterprise" },
+  { name: "Basic Website", href: "/pricing/basic-website" },
+  { name: "Professional Website", href: "/pricing/professional-website" },
+  { name: "Basic E-commerce", href: "/pricing/basic-ecommerce" },
+  { name: "Professional E-commerce", href: "/pricing/professional-ecommerce" },
 ]
 
 export default function Component() {
@@ -99,13 +99,7 @@ export default function Component() {
                   Pricing<ChevronDown className="ml-1 h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem asChild>
-                  <Link href="/services" className="w-full font-medium">
-                    Pricing Page
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
+              <DropdownMenuContent align="end" className="w-64">
                 {pricingTiers.map((tier) => (
                   <DropdownMenuItem key={tier.href} asChild>
                     <Link href={tier.href} className="w-full">
