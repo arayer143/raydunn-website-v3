@@ -12,7 +12,7 @@ const pricingPlans = [
   {
     name: "Basic Website",
     description: "Perfect for small businesses and personal websites",
-    designPrice: 1500,
+    designPrice: 500,
     monthlyPrice: 100,
     annualPrice: 1020,
     popular: false,
@@ -33,7 +33,7 @@ const pricingPlans = [
   {
     name: "Professional Website",
     description: "Ideal for growing businesses and organizations",
-    designPrice: 3000,
+    designPrice: 2000,
     monthlyPrice: 250,
     annualPrice: 2550,
     popular: true,

@@ -109,7 +109,7 @@ return (
               <h3 className="text-lg font-semibold mb-4">Pricing</h3>
               <div className="mb-6 p-4 bg-primary/5 rounded-lg">
                 <div className="text-2xl font-bold text-primary">
-                  $1,500
+                  $500
                 </div>
                 <div className="text-sm font-medium">One-time design fee</div>
               </div>
