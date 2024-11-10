@@ -18,17 +18,16 @@ const services = [
 ]
 
 const portfolioItems = [
-  { name: "All Projects", href: "/portfolio" },
   { name: "Clean Slate Pressure Washing", href: "/portfolio/clean-slate" },
   { name: "Pristine Clean Soft Wash", href: "/portfolio/pristine-clean" },
   { name: "OutKast Industrial Group", href: "/portfolio/outkast" },
 ]
 
 const pricingTiers = [
-  { name: "Basic Website", href: "/pricing/basic-website" },
-  { name: "Professional Website", href: "/pricing/professional-website" },
-  { name: "Basic E-commerce", href: "/pricing/basic-ecommerce" },
-  { name: "Professional E-commerce", href: "/pricing/professional-ecommerce" },
+  { name: "Basic Website", href: "/basic-website" },
+  { name: "Professional Website", href: "/professional-website" },
+  { name: "Basic E-commerce", href: "/basic-ecommerce" },
+  { name: "Professional E-commerce", href: "/professional-ecommerce" },
 ]
 
 export default function Component() {
@@ -84,6 +83,12 @@ export default function Component() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuItem asChild>
+                  <Link href="/portfolio" className="w-full font-medium">
+                    All Projects
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 {portfolioItems.map((item) => (
                   <DropdownMenuItem key={item.href} asChild>
                     <Link href={item.href} className="w-full">
@@ -100,6 +105,12 @@ export default function Component() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuItem asChild>
+                  <Link href="/pricing" className="w-full font-medium">
+                    All Plans
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 {pricingTiers.map((tier) => (
                   <DropdownMenuItem key={tier.href} asChild>
                     <Link href={tier.href} className="w-full">
