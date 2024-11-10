@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
-import { Sun, Moon, Menu, ChevronDown } from "lucide-react"
+import { Sun, Moon, Menu, ChevronDown, ChevronRight } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
 
@@ -31,10 +31,13 @@ const pricingTiers = [
   { name: "Enterprise", href: "/pricing/enterprise" },
 ]
 
-export default function Navbar() {
+export default function Component() {
   const { setTheme, theme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
+  const [servicesOpen, setServicesOpen] = useState(false)
+  const [portfolioOpen, setPortfolioOpen] = useState(false)
+  const [pricingOpen, setPricingOpen] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -140,29 +143,62 @@ export default function Navbar() {
                   <NavLink href="/" mobile active={pathname === "/"}>Home</NavLink>
                   <NavLink href="/about" mobile active={pathname === "/about"}>About</NavLink>
                   <div className="space-y-2">
-                    <h3 className="font-medium text-lg">Services</h3>
-                    <NavLink href="/services" mobile active={pathname === "/services"}>All Services</NavLink>
-                    {services.map((service) => (
-                      <NavLink key={service.href} href={service.href} mobile active={pathname === service.href}>
-                        {service.name}
-                      </NavLink>
-                    ))}
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-between"
+                      onClick={() => setServicesOpen(!servicesOpen)}
+                    >
+                      Services
+                      <ChevronRight className={`h-4 w-4 transition-transform ${servicesOpen ? 'rotate-90' : ''}`} />
+                    </Button>
+                    {servicesOpen && (
+                      <div className="pl-4 space-y-2">
+                        <NavLink href="/services" mobile active={pathname === "/services"}>All Services</NavLink>
+                        {services.map((service) => (
+                          <NavLink key={service.href} href={service.href} mobile active={pathname === service.href}>
+                            {service.name}
+                          </NavLink>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-2">
-                    <h3 className="font-medium text-lg">Portfolio</h3>
-                    {portfolioItems.map((item) => (
-                      <NavLink key={item.href} href={item.href} mobile active={pathname === item.href}>
-                        {item.name}
-                      </NavLink>
-                    ))}
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-between"
+                      onClick={() => setPortfolioOpen(!portfolioOpen)}
+                    >
+                      Portfolio
+                      <ChevronRight className={`h-4 w-4 transition-transform ${portfolioOpen ? 'rotate-90' : ''}`} />
+                    </Button>
+                    {portfolioOpen && (
+                      <div className="pl-4 space-y-2">
+                        {portfolioItems.map((item) => (
+                          <NavLink key={item.href} href={item.href} mobile active={pathname === item.href}>
+                            {item.name}
+                          </NavLink>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-2">
-                    <h3 className="font-medium text-lg">Pricing</h3>
-                    {pricingTiers.map((tier) => (
-                      <NavLink key={tier.href} href={tier.href} mobile active={pathname === tier.href}>
-                        {tier.name}
-                      </NavLink>
-                    ))}
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-between"
+                      onClick={() => setPricingOpen(!pricingOpen)}
+                    >
+                      Pricing
+                      <ChevronRight className={`h-4 w-4 transition-transform ${pricingOpen ? 'rotate-90' : ''}`} />
+                    </Button>
+                    {pricingOpen && (
+                      <div className="pl-4 space-y-2">
+                        {pricingTiers.map((tier) => (
+                          <NavLink key={tier.href} href={tier.href} mobile active={pathname === tier.href}>
+                            {tier.name}
+                          </NavLink>
+                        ))}
+                      </div>
+                    )}
                   </div>
                   <NavLink href="/contact" mobile active={pathname === "/contact"}>Contact</NavLink>
                 </nav>
