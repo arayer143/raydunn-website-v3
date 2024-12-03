@@ -1,5 +1,5 @@
-import Footer from "@/components/Footer/footer";
-import Navbar from "@/components/Navbar/Navbar";
+import Footer from "@/components/footer";
+import Navbar from "@/components/Navbar";
 import ProfessionalEcommerce from "@/components/Pricing-Page/professional-ecommerce";
 
 

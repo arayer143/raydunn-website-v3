@@ -1,6 +1,6 @@
 
-import Footer from "@/components/Footer/footer";
-import Header from "@/components/Navbar/Navbar";
+import Footer from "@/components/footer";
+import Header from "@/components/Navbar";
 import CleanSlateShowcasePage from "@/components/Portfolio-page/clean-slate";
 
 

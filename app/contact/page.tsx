@@ -1,7 +1,7 @@
 
-import Footer from "@/components/Footer/footer";
+import Footer from "@/components/footer";
 import ContactSection from "../contact-section";
-import Header from "@/components/Navbar/Navbar";
+import Header from "@/components/Navbar";
 
 
 

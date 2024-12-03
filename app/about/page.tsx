@@ -1,7 +1,7 @@
 
 import AboutPage from "@/components/About-Page/about-page";
-import Footer from "@/components/Footer/footer";
-import Header from "@/components/Navbar/Navbar";
+import Footer from "@/components/footer";
+import Header from "@/components/Navbar";
 
 
 

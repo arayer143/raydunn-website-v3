@@ -7,8 +7,8 @@ import CTASection from "@/components/Call-to-action/cta-section";
 import PortfolioPage from "@/components/Portfolio-page/portfolio-page";
 import FAQSection from "@/components/Home-page-sections/faq";
 import Hero from "@/components/Hero/hero";
-import Footer from "@/components/Footer/footer";
-import Navbar from "@/components/Navbar/Navbar";
+import Footer from "@/components/footer";
+import Navbar from "@/components/Navbar";
 
 import PricingSection from "@/components/Home-page-sections/pricing-section";
 

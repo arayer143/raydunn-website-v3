@@ -24,10 +24,10 @@ const portfolioItems = [
 ]
 
 const pricingTiers = [
-  { name: "Basic Website", href: "/basic-website" },
-  { name: "Professional Website", href: "/professional-website" },
-  { name: "Basic E-commerce", href: "/basic-ecommerce" },
-  { name: "Professional E-commerce", href: "/professional-ecommerce" },
+  { name: "Basic Website", href: "/pricing/basic-website" },
+  { name: "Professional Website", href: "/pricing/professional-website" },
+  { name: "Basic E-commerce", href: "/pricing/basic-ecommerce" },
+  { name: "Professional E-commerce", href: "/pricing/professional-ecommerce" },
 ]
 
 export default function Component() {

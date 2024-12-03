@@ -1,5 +1,5 @@
-import Footer from "@/components/Footer/footer";
-import Header from "@/components/Navbar/Navbar";
+import Footer from "@/components/footer";
+import Header from "@/components/Navbar";
 
 import SEOOptimizationPage from "@/components/Services-Page/seo-optimization";
 
