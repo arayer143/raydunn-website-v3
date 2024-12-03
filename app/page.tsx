@@ -6,11 +6,12 @@ import TechnologiesSection from "@/components/Home-page-sections/technologies-se
 import CTASection from "@/components/Call-to-action/cta-section";
 import PortfolioPage from "@/components/Portfolio-page/portfolio-page";
 import FAQSection from "@/components/Home-page-sections/faq";
-import Hero from "@/components/Hero/hero";
+import Hero from "@/components/Home-page-sections/hero";
 import Footer from "@/components/footer";
 import Navbar from "@/components/Navbar";
 
 import PricingSection from "@/components/Home-page-sections/pricing-section";
+import { CookieConsentPopup } from "@/components/cookie-consent-popup";
 
 
 export default function Home() {
@@ -21,7 +22,7 @@ export default function Home() {
 <Navbar />
 
     
-  <main className="flex-3">
+  <main className="flex-grow">
 
         <section className="w-full bg-gray-100 dark:bg-gray-800">
         <Hero />
@@ -34,16 +35,15 @@ export default function Home() {
         <CTASection />
         <FAQSection />
       
-  
+      
+        <ContactSection />
+      <Footer />
         </section>
 
 
      
-      <section className="w-full">
-      <ContactSection />
-      <Footer />
+<CookieConsentPopup />
 
-      </section>
 
 
 
