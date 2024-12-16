@@ -21,6 +21,7 @@ const portfolioItems = [
   { name: "Clean Slate Pressure Washing", href: "/portfolio/clean-slate" },
   { name: "Pristine Clean Soft Wash", href: "/portfolio/pristine-clean" },
   { name: "OutKast Industrial Group", href: "/portfolio/outkast" },
+  { name: "JessieBoudreaux.com ", href: "/portfolio/jessie-boudreaux" },
 ]
 
 const pricingTiers = [

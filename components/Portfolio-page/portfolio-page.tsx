@@ -13,8 +13,9 @@ export default function PortfolioPage() {
       description: "Website for Clean Slate Pressure Washing LLC ",
       image: "/cleanslatelol-whiteBG.jpg",
       category: "Website",
-      technologies: ["Bootstrap", "HTML", "Saas", "JavaScript", "PHP"],
-      link: "https://cleanslatepressurewashingnola.com/"
+      technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+      link: "https://cleanslatepressurewashingnola.com/",
+      portfolioPage: "/portfolio/clean-slate"
     },
     {
       id: 2,
@@ -22,8 +23,9 @@ export default function PortfolioPage() {
       description: "Website for Pristine Clean Soft Wash LLC",
       image: "/pristinecleanlogo.webp",
       category: "Website",
-      technologies: ["Bootstrap", "HTML", "Saas", "JavaScript", "PHP"],
-      link: "https://pristinecleansoftwash.com/"
+      technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+      link: "https://pristinecleansoftwash.com/",
+      portfolioPage: "/portfolio/pristine-clean"
     },
     {
       id: 3,
@@ -31,20 +33,21 @@ export default function PortfolioPage() {
       description: "Website for OutKast Industrial Group LLC",
       image: "/outkast-logo.webp",
       category: "Website",
-      technologies: ["Bootstrap", "HTML", "Saas", "JavaScript", "PHP"],
-      link: "https://outkastindustrial.com/"
+      technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
+      link: "https://outkastindustrial.com/",
+      portfolioPage: "/portfolio/outkast"
     },
 
     {
       id: 4,
-      title: "RayDunn Web Solutions",
-      description: "Our Homepage for our company RayDunn",
-      image: "/PNG Transparent Logo.png",
-      category: "Web Application",
-      technologies: ["Next.js, "],
-      link: "https://example-fitnessapp.com"
-    },
-
+      title: "Jessie Boudreaux Social Media",
+      description: "Turnkey WordPress solution for a social media company",
+      image: "/jessie-boudreaux-logo.webp",
+      category: "Website",
+      technologies: ["WordPress", "Custom Theme", "Responsive Design"],
+      link: "https://jessieboudreaux.com/",
+      portfolioPage: "/portfolio/jessie-boudreaux"
+    }
   ]
 
   const categories = ["All", "Web Application", "Website"]
@@ -93,23 +96,24 @@ export default function PortfolioPage() {
                         ))}
                       </div>
                     </CardContent>
-                    <CardFooter>
-                      <Button asChild className="gap-3 px-10">
+                    <CardFooter className="flex justify-between">
+                      <Button asChild variant="outline" className="w-[48%]">
                         <Link href={project.link} target="_blank" rel="noopener noreferrer">
                           View Project
                         </Link>
                       </Button>
+                      <Button asChild className="w-[48%]">
+                        <Link href={project.portfolioPage}>
+                          Read More
+                        </Link>
+                      </Button>
                     </CardFooter>
-            
-                    
                   </Card>
                 ))}
             </div>
           </TabsContent>
         ))}
       </Tabs>
-
-
     </div>
   )
 }
