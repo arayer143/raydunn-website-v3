@@ -56,7 +56,7 @@ export default function CleanSlateShowcasePage() {
               We've incorporated WebP image format for optimal performance and visual quality, ensuring fast load times without compromising on image fidelity.
             </p>
             <div className="flex flex-wrap gap-2 mt-4">
-              {['HTML5', 'CSS3', 'TypeScript', 'React', 'Next.js', 'Tailwind CSS', 'Three.js', 'Framer Motion', 'WebP'].map((tech) => (
+              {[ 'TypeScript', 'React', 'Next.js', 'Tailwind CSS', 'Three.js', 'Framer Motion', 'WebP'].map((tech) => (
                 <Badge key={tech} variant="secondary" className="bg-secondary/50 text-secondary-foreground dark:bg-secondary/30 dark:text-secondary-foreground/90">{tech}</Badge>
               ))}
             </div>

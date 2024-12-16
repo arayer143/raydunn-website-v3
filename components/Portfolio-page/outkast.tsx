@@ -1,13 +1,12 @@
 'use client'
 
-import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Separator } from "@/components/ui/separator"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
-import { Code, Layout, Palette, FileJson, Database, Globe, Camera, Music, ExternalLink, Users, Zap, MessageSquare } from 'lucide-react'
+import { Code, Layout, Palette, FileJson, Database, Globe, ExternalLink, Users, Zap, MessageSquare, Droplet, Shield, Recycle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import dynamic from 'next/dynamic'
@@ -41,7 +40,7 @@ export default function OutkastIGShowcasePage() {
             Outkast IG
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-xl text-foreground dark:text-foreground">
-            A dynamic social media platform inspired by Instagram, tailored for music enthusiasts.
+            A modern, responsive website for a professional industrial cleaning company.
           </p>
         </motion.div>
 
@@ -49,13 +48,13 @@ export default function OutkastIGShowcasePage() {
           <div className="order-2 lg:order-1">
             <h2 className="text-3xl font-bold mb-6 text-primary dark:text-primary-foreground">Project Overview</h2>
             <p className="text-lg text-muted-foreground dark:text-muted-foreground/90 mb-6">
-              Outkast IG is a cutting-edge social media platform that combines the visual appeal of Instagram with a focus on music sharing and discovery. This project showcases our ability to create complex, interactive web applications with modern technologies.
+              Outkast IG is a sleek and modern website designed for a professional industrial cleaning company. This project showcases our ability to create visually appealing and highly functional websites that effectively represent our client's services and expertise in industrial cleaning solutions.
             </p>
             <p className="text-lg text-muted-foreground dark:text-muted-foreground/90 mt-4">
-              We've leveraged the latest web technologies to ensure a smooth, responsive user experience with real-time updates and seamless navigation.
+              We've leveraged the latest web technologies to ensure a smooth, responsive user experience with seamless navigation and optimized content delivery, highlighting the company's industrial cleaning capabilities and services.
             </p>
             <div className="flex flex-wrap gap-2 mt-4">
-              {['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Node.js', 'MongoDB'].map((tech) => (
+              {['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Framer Motion', 'Three.js'].map((tech) => (
                 <Badge key={tech} variant="secondary" className="bg-secondary/50 text-secondary-foreground dark:bg-secondary/30 dark:text-secondary-foreground/90">{tech}</Badge>
               ))}
             </div>
@@ -68,7 +67,6 @@ export default function OutkastIGShowcasePage() {
                   <div className="w-full h-full">
                     <PortfolioScene 
                       imagePath="/outkast-logo.webp"
-                      
                       scale={2.0}
                       bounceSpeed={1.2}
                       rotationSpeed={0.6}
@@ -101,17 +99,15 @@ export default function OutkastIGShowcasePage() {
           <h2 className="text-3xl font-bold mb-6 text-primary dark:text-primary-foreground">Key Features</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
-              "User profiles with customizable music preferences",
-              "Photo and music sharing capabilities",
-              "Real-time notifications and messaging",
-              "Discover page for new music and artists",
-              "Integration with popular music streaming services",
-              "Advanced search functionality for users, songs, and artists",
+              "Responsive design optimized for all devices",
+              "Comprehensive showcase of industrial cleaning services",
+              "Application form to allow company to recieve job applications with resume attachments",
+              "Contact form with email integration for inquiries",
             ].map((feature, index) => (
               <motion.div key={index} variants={itemVariants}>
                 <Card className="bg-card dark:bg-card/50 text-card-foreground dark:text-card-foreground/90">
                   <CardContent className="flex items-center space-x-4 p-6">
-                    <Music className="h-10 w-10 text-primary dark:text-primary-foreground flex-shrink-0" />
+                    <Droplet className="h-10 w-10 text-primary dark:text-primary-foreground flex-shrink-0" />
                     <span className="text-lg">{feature}</span>
                   </CardContent>
                 </Card>
@@ -126,25 +122,25 @@ export default function OutkastIGShowcasePage() {
             <AccordionItem value="item-1" className="border-b border-border dark:border-border/50">
               <AccordionTrigger className="text-foreground dark:text-foreground/90">Next.js App Router and Server Components</AccordionTrigger>
               <AccordionContent className="text-muted-foreground dark:text-muted-foreground/90">
-                We utilized Next.js 15's App Router for efficient routing and leveraged Server Components for improved performance and SEO. This modern architecture allows for a seamless blend of server-side and client-side rendering.
+                We utilized Next.js 15's App Router for efficient routing and leveraged Server Components for improved performance and SEO. This modern architecture allows for a seamless blend of server-side and client-side rendering, crucial for showcasing industrial cleaning services effectively.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2" className="border-b border-border dark:border-border/50">
-              <AccordionTrigger className="text-foreground dark:text-foreground/90">Real-time Updates with WebSockets</AccordionTrigger>
+              <AccordionTrigger className="text-foreground dark:text-foreground/90">Interactive Service Showcase</AccordionTrigger>
               <AccordionContent className="text-muted-foreground dark:text-muted-foreground/90">
-                Implemented WebSocket connections for real-time notifications, messages, and feed updates, ensuring users always have the latest content without needing to refresh the page.
+                Implemented an interactive service showcase using Three.js and React Three Fiber, allowing potential clients to explore industrial cleaning equipment and processes in a 3D environment, enhancing engagement and understanding of the company's capabilities.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3" className="border-b border-border dark:border-border/50">
-              <AccordionTrigger className="text-foreground dark:text-foreground/90">Optimized Media Handling</AccordionTrigger>
+              <AccordionTrigger className="text-foreground dark:text-foreground/90">Responsive Design with Tailwind CSS</AccordionTrigger>
               <AccordionContent className="text-muted-foreground dark:text-muted-foreground/90">
-                Utilized Next.js Image component and custom optimizations for efficient loading and display of user-uploaded photos and album artwork, ensuring fast load times and a smooth browsing experience.
+                Utilized Tailwind CSS for a fully responsive design that looks great on all devices, from mobile phones to large desktop screens, ensuring a consistent user experience across all platforms and making it easy for clients to access information about industrial cleaning services.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-4" className="border-b border-border dark:border-border/50">
-              <AccordionTrigger className="text-foreground dark:text-foreground/90">Advanced State Management</AccordionTrigger>
+              <AccordionTrigger className="text-foreground dark:text-foreground/90">Interactive UI with Framer Motion</AccordionTrigger>
               <AccordionContent className="text-muted-foreground dark:text-muted-foreground/90">
-                Implemented a combination of React Context and custom hooks for efficient state management across the application, ensuring a responsive and consistent user experience.
+                Incorporated Framer Motion for smooth, engaging animations and transitions throughout the site, enhancing the overall user experience and bringing the industrial cleaning service presentations to life with dynamic content reveals and interactive elements.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -153,34 +149,34 @@ export default function OutkastIGShowcasePage() {
         <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16" variants={containerVariants}>
           {[
             {
-              icon: <Users className="h-10 w-10" />,
-              title: "Social Networking",
-              description: "Connect with friends, follow artists, and share your music taste."
+              icon: <Droplet className="h-10 w-10" />,
+              title: "Specialized Cleaning",
+              description: "Showcase of advanced industrial cleaning techniques and equipment."
             },
             {
-              icon: <Music className="h-10 w-10" />,
-              title: "Music Integration",
-              description: "Seamless integration with popular music streaming platforms."
-            },
-            {
-              icon: <Camera className="h-10 w-10" />,
-              title: "Visual Sharing",
-              description: "Share photos and visual content related to your music experiences."
+              icon: <Shield className="h-10 w-10" />,
+              title: "Safety First",
+              description: "Highlighting commitment to safety standards and protocols."
             },
             {
               icon: <Zap className="h-10 w-10" />,
-              title: "Real-time Updates",
-              description: "Instant notifications and feed updates for an engaging experience."
+              title: "Efficient Solutions",
+              description: "Demonstrating time-saving and cost-effective cleaning processes."
             },
             {
               icon: <Globe className="h-10 w-10" />,
-              title: "Music Discovery",
-              description: "Explore new artists and genres through personalized recommendations."
+              title: "Industry Coverage",
+              description: "Displaying versatility across various industrial sectors."
             },
             {
               icon: <MessageSquare className="h-10 w-10" />,
-              title: "Messaging",
-              description: "Direct messaging feature for private conversations about music."
+              title: "Client Communication",
+              description: "Easy-to-use contact forms and quote request system."
+            },
+            {
+              icon: <Recycle className="h-10 w-10" />,
+              title: "Eco-Friendly Practices",
+              description: "Showcasing sustainable and environmentally conscious cleaning methods."
             },
           ].map((feature, index) => (
             <motion.div key={index} variants={itemVariants}>
@@ -203,9 +199,9 @@ export default function OutkastIGShowcasePage() {
           className="bg-primary dark:bg-primary/80 text-primary-foreground dark:text-primary-foreground/90 rounded-lg p-8 text-center shadow-2xl"
           variants={itemVariants}
         >
-          <h2 className="text-3xl font-bold mb-4">Ready to Revolutionize Social Music Sharing?</h2>
+          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Industrial Cleaning Operations?</h2>
           <p className="text-lg mb-6 text-primary-foreground/80 dark:text-primary-foreground/70">
-            Let's discuss how we can create an innovative and engaging platform for music enthusiasts.
+            Let's discuss how we can create a cutting-edge website to showcase your industrial cleaning services and grow your business.
           </p>
           <Button asChild size="lg" variant="secondary" className="font-semibold bg-secondary dark:bg-secondary/80 text-secondary-foreground dark:text-secondary-foreground/90 hover:bg-secondary/90 dark:hover:bg-secondary/70">
             <a href="/contact">Get Started Today</a>
@@ -215,3 +211,6 @@ export default function OutkastIGShowcasePage() {
     </motion.div>
   )
 }
+
+
+
