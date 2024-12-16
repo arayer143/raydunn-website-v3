@@ -11,7 +11,7 @@ export default function PortfolioPage() {
       id: 1,
       title: "E-commerce Platform",
       description: "Website for Clean Slate Pressure Washing LLC ",
-      image: "/cleanslatelol-whiteBG.jpg",
+      image: "/cleanslatelol-whiteBG.webp",
       category: "Website",
       technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS"],
       link: "https://cleanslatepressurewashingnola.com/",
