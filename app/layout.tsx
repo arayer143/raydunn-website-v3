@@ -1,23 +1,8 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { ThemeProvider } from "next-themes"
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
-
-
-
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: {
@@ -25,7 +10,7 @@ export const metadata: Metadata = {
     template: '%s | RayDunn Web Solutions',
   },
   description: 'RayDunn Web Solutions crafts stunning, high-performance websites that captivate and convert. Boost your digital presence with our innovative designs. Contact us!',
-  keywords: ['Next.js', 'React', 'JavaScript'],
+  keywords: ['Next.js', 'React', 'JavaScript', 'Web Development', 'RayDunn Web Solutions'],
   authors: [{ name: 'Alex Rayer' }],
   creator: 'Alex Rayer',
   publisher: 'RayDunn Web Solutions',
@@ -41,9 +26,10 @@ export const metadata: Metadata = {
     siteName: 'RayDunn Web Solutions',
     images: [
       {
-        url: 'https://raydunnsolutions.com/PNG Transparent Logo.png',
+        url: 'https://raydunnsolutions.com/og-image.png',
         width: 1200,
         height: 630,
+        alt: 'RayDunn Web Solutions Logo',
       },
     ],
     locale: 'en_US',
@@ -54,7 +40,7 @@ export const metadata: Metadata = {
     title: 'RayDunn Web Solutions',
     description: 'RayDunn Web Solutions crafts stunning, high-performance websites that captivate and convert. Boost your digital presence with our innovative designs. Contact us!',
     creator: '@yourtwitterhandle',
-    images: ['https://raydunnsolutions.com/PNG Transparent Logo.png'],
+    images: ['https://raydunnsolutions.com/twitter-image.png'],
   },
   robots: {
     index: true,
@@ -68,10 +54,21 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: '/PNG Transparent Logo.png'
-
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: '/apple-touch-icon.png',
   },
-  manifest: '/site.webmanifest',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: 'white' },
+    { media: '(prefers-color-scheme: dark)', color: 'black' },
+  ],
 }
 
 export default function RootLayout({
@@ -80,22 +77,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-              <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-        {children}
-
-        <SpeedInsights />
-        <Analytics />
-
-        </ThemeProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className="font-sans antialiased">
+        <Providers>
+          {children}
+          <SpeedInsights />
+          <Analytics />
+        </Providers>
       </body>
     </html>
   );

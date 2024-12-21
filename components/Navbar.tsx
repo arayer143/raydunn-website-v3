@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
-import { Sun, Moon, Menu, ChevronDown, ChevronRight } from "lucide-react"
+import { Sun, Moon, Menu, ChevronDown, ChevronRight, UserCircle2 } from 'lucide-react'
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
 
@@ -124,6 +124,12 @@ export default function Component() {
             <NavLink href="/contact" active={pathname === "/contact"}>Contact</NavLink>
           </nav>
           <div className="flex-1 flex items-center justify-end space-x-4">
+            <Link href="/login" passHref>
+              <Button variant="ghost" size="sm" className="text-sm font-medium">
+                <UserCircle2 className="mr-2 h-4 w-4" />
+                Login
+              </Button>
+            </Link>
             {mounted && (
               <Button
                 variant="ghost"
@@ -206,6 +212,10 @@ export default function Component() {
                       </div>
                     )}
                   </div>
+                  <NavLink href="/login" mobile>
+                    <UserCircle2 className="mr-2 h-4 w-4" />
+                    Login
+                  </NavLink>
                   <NavLink href="/contact" mobile active={pathname === "/contact"}>Contact</NavLink>
                 </nav>
               </SheetContent>
@@ -233,3 +243,4 @@ function NavLink({ href, children, mobile = false, active = false }: { href: str
     </Link>
   )
 }
+
