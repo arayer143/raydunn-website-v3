@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "prisma": "dotenv -e .env.local -- prisma",
-    "postinstall": "prisma generate",
-        "test-db": "ts-node scripts/test-db-connection.ts"
+    "postinstall": "prisma generate"
+
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
