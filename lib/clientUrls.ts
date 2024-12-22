@@ -1,5 +1,5 @@
 export const clientUrls = [
-  "https://www.cleanslatepressurewashingnola.com/44444",
+  "https://www.cleanslatepressurewashingnola.com",
   "https://www.pristinecleansoftwash.com",
   "https://outkastindustrial.com"
 ];
