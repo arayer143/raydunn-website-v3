@@ -1,36 +1,22 @@
 import { NextResponse } from 'next/server'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 export async function GET() {
   try {
     const userCount = await prisma.user.count()
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        websiteUrl: true,
-        clientId: true,
-        client: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    })
-
     return NextResponse.json({
-      status: 'success',
-      message: 'Database connection successful',
+      databaseConnection: 'success',
       userCount,
-      users,
+      nextAuthUrl: process.env.NEXTAUTH_URL,
+      nodeEnv: process.env.NODE_ENV,
     })
   } catch (error) {
-    console.error('Database connection error:', error)
+    console.error('Debug route error:', error)
     return NextResponse.json({
-      status: 'error',
-      message: 'Database connection failed',
-      error: error instanceof Error ? error.message : String(error),
+      databaseConnection: 'error',
+      error: error instanceof Error ? error.message : 'Unknown error',
+      nextAuthUrl: process.env.NEXTAUTH_URL,
+      nodeEnv: process.env.NODE_ENV,
     }, { status: 500 })
   }
 }
