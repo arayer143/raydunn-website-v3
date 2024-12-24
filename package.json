@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run prisma:generate && next build",
+    "build:prisma": "prisma generate",
+    "build:next": "next build",
+    "build": "npm run build:prisma && npm run build:next",
     "start": "next start",
     "lint": "next lint",
     "prisma": "dotenv -e .env.local -- prisma",
-    "prisma:generate": "npm run prisma generate",
     "db:push": "npm run prisma db push",
     "db:pull": "npm run prisma db pull",
     "generate": "npm run prisma generate"
