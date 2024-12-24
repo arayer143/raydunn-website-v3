@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/react';
-import GoogleAnalytics from '@/components/GoogleAnalytics'
+
 import { Providers } from "@/components/Providers";
 
 export const metadata: Metadata = {
@@ -84,7 +84,7 @@ export default function RootLayout({
           {children}
           <SpeedInsights />
           <Analytics />
-          <GoogleAnalytics />
+        
         </Providers>
       </body>
     </html>

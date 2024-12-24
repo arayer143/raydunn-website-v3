@@ -11,10 +11,10 @@ import { Button } from "@/components/ui/button"
 import Image from 'next/image'
 
 interface AnalyticsData {
-  visitors: number
-  pageViews: number
-  bounceRate: string
-  leadsGenerated: number
+  visitors: number;
+  pageViews: number;
+  bounceRate: number;
+  leadsGenerated: number;
 }
 
 export function CleanSlateDashboard() {
@@ -22,7 +22,7 @@ export function CleanSlateDashboard() {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
     visitors: 0,
     pageViews: 0,
-    bounceRate: "0%",
+    bounceRate: 0,
     leadsGenerated: 0
   })
   const [error, setError] = useState<string | null>(null)
@@ -31,7 +31,12 @@ export function CleanSlateDashboard() {
     async function fetchAnalyticsData() {
       try {
         const data = await getCleanSlateAnalyticsData()
-        setAnalyticsData(data)
+        setAnalyticsData({
+          visitors: Number(data.visitors),
+          pageViews: Number(data.pageViews),
+          bounceRate: Number(data.bounceRate),
+          leadsGenerated: Number(data.leadsGenerated)
+        })
       } catch (error) {
         setError("Failed to fetch analytics data. Please check your configuration and try again.")
         console.error("Error fetching analytics data:", error)
@@ -96,10 +101,10 @@ export function CleanSlateDashboard() {
           <CardContent className="pt-6">
             <dl className="space-y-4">
               {[
-                { label: "Website Visitors", value: analyticsData.visitors },
-                { label: "Page Views", value: analyticsData.pageViews },
-                { label: "Bounce Rate", value: analyticsData.bounceRate },
-                { label: "Leads Generated", value: analyticsData.leadsGenerated },
+                { label: "Website Visitors", value: analyticsData.visitors.toLocaleString() },
+                { label: "Page Views", value: analyticsData.pageViews.toLocaleString() },
+                { label: "Bounce Rate", value: `${(analyticsData.bounceRate * 100).toFixed(2)}%` },
+                { label: "Leads Generated", value: analyticsData.leadsGenerated.toLocaleString() },
               ].map((item, index) => (
                 <div key={index} className="flex justify-between items-center border-b pb-2 last:border-b-0">
                   <dt className="font-medium text-gray-600 dark:text-gray-300">{item.label}:</dt>
