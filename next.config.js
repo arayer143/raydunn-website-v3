@@ -21,9 +21,7 @@ const nextConfig = {
     }
     return config
   },
-  env: {
-    GA_PROPERTY_ID: process.env.GA_PROPERTY_ID,
-  },
+
 }
 
 module.exports = nextConfig
