@@ -13,7 +13,6 @@
     "db:push": "npm run prisma db push",
     "db:pull": "npm run prisma db pull",
     "generate": "npm run prisma generate"
-  
   },
   "dependencies": {
     "@google-analytics/data": "^4.12.0",
