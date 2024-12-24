@@ -3,16 +3,23 @@
 import { useEffect, useState } from 'react'
 import { useSession } from "next-auth/react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Building2, Home, Droplets, Calendar, ExternalLink } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 import { getCleanSlateAnalyticsData } from '@/lib/googleAnalytics'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import Image from 'next/image'
 
+interface AnalyticsData {
+  visitors: number
+  pageViews: number
+  bounceRate: string
+  leadsGenerated: number
+}
+
 export function CleanSlateDashboard() {
   const { data: session, status } = useSession()
-  const [analyticsData, setAnalyticsData] = useState({
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
     visitors: 0,
     pageViews: 0,
     bounceRate: "0%",
@@ -43,13 +50,6 @@ export function CleanSlateDashboard() {
 
   if (!session?.user) {
     return <div className="flex items-center justify-center h-screen">No user data available</div>
-  }
-
-  const serviceData = {
-    jobsCompleted: 312,
-    squareFootageCleaned: 450000,
-    residentialJobs: 245,
-    commercialJobs: 67
   }
 
   const paymentData = {
@@ -87,7 +87,7 @@ export function CleanSlateDashboard() {
         </Alert>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2">
         <Card className="shadow-lg">
           <CardHeader className="bg-blue-50 dark:bg-blue-900">
             <CardTitle className="text-blue-700 dark:text-blue-100">Website Performance</CardTitle>
@@ -107,31 +107,6 @@ export function CleanSlateDashboard() {
                 </div>
               ))}
             </dl>
-          </CardContent>
-        </Card>
-
-        <Card className="shadow-lg">
-          <CardHeader className="bg-green-50 dark:bg-green-900">
-            <CardTitle className="text-green-700 dark:text-green-100">Service Statistics</CardTitle>
-            <CardDescription>All time metrics</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-2 gap-6">
-              {[
-                { icon: Droplets, color: "text-blue-500", label: "Jobs Completed", value: serviceData.jobsCompleted },
-                { icon: Calendar, color: "text-green-500", label: "Sq Ft Cleaned", value: serviceData.squareFootageCleaned.toLocaleString() },
-                { icon: Home, color: "text-orange-500", label: "Residential", value: serviceData.residentialJobs },
-                { icon: Building2, color: "text-purple-500", label: "Commercial", value: serviceData.commercialJobs },
-              ].map((item, index) => (
-                <div key={index} className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <item.icon className={`h-5 w-5 ${item.color}`} />
-                    <span className="text-sm font-medium">{item.label}</span>
-                  </div>
-                  <p className="text-2xl font-bold">{item.value}</p>
-                </div>
-              ))}
-            </div>
           </CardContent>
         </Card>
 
@@ -188,4 +163,3 @@ export function CleanSlateDashboard() {
     </div>
   )
 }
-

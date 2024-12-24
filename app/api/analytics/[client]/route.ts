@@ -1,34 +1,21 @@
-import { NextResponse } from 'next/server'
-import { google } from 'googleapis'
-
-const analyticsreporting = google.analyticsreporting('v4')
+import { NextRequest, NextResponse } from 'next/server'
+import { BetaAnalyticsDataClient } from '@google-analytics/data'
 
 type ClientConfig = {
-  clientEmail: string;
-  privateKey: string;
-  viewId: string;
+  credentials: string;
+  propertyId: string;
 }
 
 const clientConfigs: Record<string, ClientConfig> = {
   cleanSlate: {
-    clientEmail: process.env.CLEAN_SLATE_GA_CLIENT_EMAIL || '',
-    privateKey: process.env.CLEAN_SLATE_GA_PRIVATE_KEY?.replace(/\\n/g, '\n') || '',
-    viewId: process.env.CLEAN_SLATE_GA_VIEW_ID || '',
+    credentials: process.env.CLEAN_SLATE_GOOGLE_APPLICATION_CREDENTIALS || '',
+    propertyId: process.env.CLEAN_SLATE_GA_PROPERTY_ID || '',
   },
-  pristineClean: {
-    clientEmail: process.env.PRISTINE_CLEAN_GA_CLIENT_EMAIL || '',
-    privateKey: process.env.PRISTINE_CLEAN_GA_PRIVATE_KEY?.replace(/\\n/g, '\n') || '',
-    viewId: process.env.PRISTINE_CLEAN_GA_VIEW_ID || '',
-  },
-  outkast: {
-    clientEmail: process.env.OUTKAST_GA_CLIENT_EMAIL || '',
-    privateKey: process.env.OUTKAST_GA_PRIVATE_KEY?.replace(/\\n/g, '\n') || '',
-    viewId: process.env.OUTKAST_GA_VIEW_ID || '',
-  },
+  // Add other clients here if needed
 }
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { client: string } }
 ) {
   const clientKey = params.client as keyof typeof clientConfigs
@@ -38,39 +25,26 @@ export async function GET(
     return NextResponse.json({ error: 'Invalid client' }, { status: 400 })
   }
 
-  if (!config.clientEmail || !config.privateKey || !config.viewId) {
+  if (!config.credentials || !config.propertyId) {
     return NextResponse.json({ error: 'Missing configuration' }, { status: 500 })
   }
 
-  const auth = new google.auth.JWT({
-    email: config.clientEmail,
-    key: config.privateKey,
-    scopes: ['https://www.googleapis.com/auth/analytics.readonly'],
-  })
-
   try {
-    const response = await analyticsreporting.reports.batchGet({
-      auth,
-      requestBody: {
-        reportRequests: [
-          {
-            viewId: config.viewId,
-            dateRanges: [{ startDate: '30daysAgo', endDate: 'today' }],
-            metrics: [
-              { expression: 'ga:sessions' },
-              { expression: 'ga:pageviews' },
-              { expression: 'ga:bounceRate' },
-              { expression: 'ga:goalCompletionsAll' },
-            ],
-          },
-        ],
-      },
-    })
+    const credentials = JSON.parse(config.credentials)
+    const analyticsDataClient = new BetaAnalyticsDataClient({ credentials });
 
-    const report = response.data.reports?.[0]
-    const rows = report?.data?.rows
+    const [response] = await analyticsDataClient.runReport({
+      property: `properties/${config.propertyId}`,
+      dateRanges: [{ startDate: '30daysAgo', endDate: 'today' }],
+      metrics: [
+        { name: 'sessions' },
+        { name: 'screenPageViews' },
+        { name: 'bounceRate' },
+        { name: 'conversions' },
+      ],
+    });
 
-    if (!rows || rows.length === 0) {
+    if (!response || !response.rows || response.rows.length === 0) {
       return NextResponse.json({
         visitors: 0,
         pageViews: 0,
@@ -79,20 +53,21 @@ export async function GET(
       })
     }
 
-    const metrics = rows[0].metrics?.[0].values
+    const metrics = response.rows[0].metricValues
 
     if (!metrics || metrics.length < 4) {
       return NextResponse.json({ error: 'Incomplete metrics data' }, { status: 500 })
     }
 
     return NextResponse.json({
-      visitors: parseInt(metrics[0]) || 0,
-      pageViews: parseInt(metrics[1]) || 0,
-      bounceRate: (parseFloat(metrics[2]) || 0).toFixed(2) + '%',
-      leadsGenerated: parseInt(metrics[3]) || 0,
+      visitors: parseInt(metrics[0].value || '0'),
+      pageViews: parseInt(metrics[1].value || '0'),
+      bounceRate: (parseFloat(metrics[2].value || '0') * 100).toFixed(2) + '%',
+      leadsGenerated: parseInt(metrics[3].value || '0'),
     })
   } catch (error) {
     console.error(`Error fetching Google Analytics data for ${clientKey}:`, error)
     return NextResponse.json({ error: 'Failed to fetch analytics data' }, { status: 500 })
   }
 }
+
