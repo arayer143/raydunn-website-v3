@@ -3,16 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "dotenv -e .env.local -- next dev",
-    "build:prisma": "dotenv -e .env.local -- prisma generate",
-    "build:next": "dotenv -e .env.local -- next build",
+    "build:prisma": "prisma generate",
+    "build:next": "next build",
     "build": "npm run build:prisma && npm run build:next",
-    "start": "dotenv -e .env.local -- next start",
+    "start": "next start",
     "lint": "next lint",
-    "prisma": "dotenv -e .env.local -- prisma",
-    "db:push": "npm run prisma db push",
-    "db:pull": "npm run prisma db pull",
-    "generate": "npm run prisma generate"
+    "prisma": "prisma",
+    "db:push": "prisma db push",
+    "db:pull": "prisma db pull",
+    "generate": "prisma generate"
   },
   "dependencies": {
     "@google-analytics/data": "^4.12.0",
