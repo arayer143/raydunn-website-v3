@@ -7,18 +7,20 @@ export interface AnalyticsData {
   leadsGenerated: number;
 }
 
-const propertyId = process.env.GA_PROPERTY_ID;
-
 export async function getCleanSlateAnalyticsData(): Promise<AnalyticsData> {
-  if (typeof window !== 'undefined') {
-    throw new Error('This function should only be called from the server side');
-  }
-
-  if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+  const credentialsString = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+  
+  if (!credentialsString) {
     throw new Error('GOOGLE_APPLICATION_CREDENTIALS environment variable is not set');
   }
 
-  const credentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+  let credentials;
+  try {
+    credentials = JSON.parse(credentialsString);
+  } catch (error) {
+    console.error('Failed to parse GOOGLE_APPLICATION_CREDENTIALS:', error);
+    throw new Error('Invalid GOOGLE_APPLICATION_CREDENTIALS format');
+  }
 
   const analyticsDataClient = new BetaAnalyticsDataClient({
     credentials: credentials,
@@ -26,7 +28,7 @@ export async function getCleanSlateAnalyticsData(): Promise<AnalyticsData> {
 
   try {
     const [response] = await analyticsDataClient.runReport({
-      property: `properties/${propertyId}`,
+      property: `properties/${process.env.GA_PROPERTY_ID}`,
       dateRanges: [
         {
           startDate: '7daysAgo',
