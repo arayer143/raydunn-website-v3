@@ -7,8 +7,19 @@ const nextConfig = {
   webpack: (config, { isServer }) => {
     if (isServer) {
       config.externals.push('@prisma/client')
+    } else {
+      // Client-side specific configuration
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
     }
     return config
+  },
+  env: {
+    GA_PROPERTY_ID: process.env.GA_PROPERTY_ID,
   },
 }
 

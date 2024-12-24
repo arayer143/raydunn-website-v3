@@ -10,6 +10,10 @@ export interface AnalyticsData {
 const propertyId = process.env.GA_PROPERTY_ID;
 
 export async function getCleanSlateAnalyticsData(): Promise<AnalyticsData> {
+  if (typeof window !== 'undefined') {
+    throw new Error('This function should only be called from the server side');
+  }
+
   if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
     throw new Error('GOOGLE_APPLICATION_CREDENTIALS environment variable is not set');
   }
@@ -53,4 +57,3 @@ export async function getCleanSlateAnalyticsData(): Promise<AnalyticsData> {
     throw error;
   }
 }
-

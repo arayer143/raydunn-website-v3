@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { useSession } from "next-auth/react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ExternalLink } from 'lucide-react'
-import { getCleanSlateAnalyticsData } from '@/lib/googleAnalytics'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle } from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -30,13 +29,12 @@ export function CleanSlateDashboard() {
   useEffect(() => {
     async function fetchAnalyticsData() {
       try {
-        const data = await getCleanSlateAnalyticsData()
-        setAnalyticsData({
-          visitors: Number(data.visitors),
-          pageViews: Number(data.pageViews),
-          bounceRate: Number(data.bounceRate),
-          leadsGenerated: Number(data.leadsGenerated)
-        })
+        const response = await fetch('/api/analytics')
+        if (!response.ok) {
+          throw new Error('Failed to fetch analytics data')
+        }
+        const data = await response.json()
+        setAnalyticsData(data)
       } catch (error) {
         setError("Failed to fetch analytics data. Please check your configuration and try again.")
         console.error("Error fetching analytics data:", error)
@@ -96,7 +94,7 @@ export function CleanSlateDashboard() {
         <Card className="shadow-lg">
           <CardHeader className="bg-blue-50 dark:bg-blue-900">
             <CardTitle className="text-blue-700 dark:text-blue-100">Website Performance</CardTitle>
-            <CardDescription>Last 30 days</CardDescription>
+            <CardDescription>Last 7 days</CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <dl className="space-y-4">
@@ -168,3 +166,4 @@ export function CleanSlateDashboard() {
     </div>
   )
 }
+
