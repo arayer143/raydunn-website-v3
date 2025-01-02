@@ -1,50 +1,44 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Load environment variables
+dotenv.config({ path: '.env.local' });
 
-async function testGAConnection() {
+async function testGAIntegration() {
+  console.log('Starting Google Analytics Integration Test');
+
+  const websiteUrl = 'https://www.cleanslatepressurewashingnola.com';
+  
+  // Log environment variables (without revealing sensitive data)
+  console.log('Environment variables check:');
+  console.log('CLEANSLATE_GA_CLIENT_EMAIL:', process.env.CLEANSLATE_GA_CLIENT_EMAIL ? 'Set' : 'Not set');
+  console.log('CLEANSLATE_GA_PRIVATE_KEY:', process.env.CLEANSLATE_GA_PRIVATE_KEY ? 'Set' : 'Not set');
+  console.log('CLEANSLATE_GA_PROPERTY_ID:', process.env.CLEANSLATE_GA_PROPERTY_ID ? 'Set' : 'Not set');
+
   try {
-    // Read and parse the GA credentials environment variable
-    const gaCredentials = JSON.parse(process.env.GA_CREDENTIALS || '{}');
-    const websiteUrl = 'https://www.cleanslatepressurewashingnola.com';
-    const credentialsPath = gaCredentials[websiteUrl];
+    const credentials = {
+      clientEmail: process.env.CLEANSLATE_GA_CLIENT_EMAIL,
+      privateKey: process.env.CLEANSLATE_GA_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      propertyId: process.env.CLEANSLATE_GA_PROPERTY_ID,
+    };
 
-    if (!credentialsPath) {
-      throw new Error(`No credentials found for ${websiteUrl}`);
+    if (!credentials.clientEmail || !credentials.privateKey || !credentials.propertyId) {
+      throw new Error('Incomplete credentials');
     }
 
-    // Get absolute path to credentials file
-    const absoluteCredentialsPath = path.join(process.cwd(), credentialsPath);
-    console.log('Looking for credentials file at:', absoluteCredentialsPath);
+    console.log('Credentials loaded successfully');
 
-    if (!fs.existsSync(absoluteCredentialsPath)) {
-      throw new Error(`Credentials file not found at: ${absoluteCredentialsPath}`);
-    }
-
-    // Read and parse credentials
-    const credentials = JSON.parse(fs.readFileSync(absoluteCredentialsPath, 'utf8'));
-    console.log('Successfully loaded credentials');
-
-    // Initialize the Analytics client
     const analyticsDataClient = new BetaAnalyticsDataClient({
-      credentials: credentials,
+      credentials: {
+        client_email: credentials.clientEmail,
+        private_key: credentials.privateKey,
+      },
     });
-    console.log('Successfully initialized Analytics client');
 
-    // Get property ID from environment
-    const propertyId = process.env.GA_PROPERTY_ID;
-    if (!propertyId) {
-      throw new Error('GA_PROPERTY_ID is not set in environment variables');
-    }
+    console.log('Analytics client created, attempting to run report');
 
-    // Run a simple test report
-    console.log('Running test report...');
     const [response] = await analyticsDataClient.runReport({
-      property: `properties/${propertyId}`,
+      property: `properties/${credentials.propertyId}`,
       dateRanges: [
         {
           startDate: '7daysAgo',
@@ -55,16 +49,25 @@ async function testGAConnection() {
         {
           name: 'activeUsers',
         },
+        {
+          name: 'screenPageViews',
+        },
+        {
+          name: 'bounceRate',
+        },
+        {
+          name: 'conversions',
+        },
       ],
     });
 
-    console.log('Successfully retrieved report:');
+    console.log('Report run successfully. Data:');
     console.log(JSON.stringify(response, null, 2));
+
+    console.log('Google Analytics Integration Test Completed Successfully');
   } catch (error) {
-    console.error('Error testing GA connection:', error);
-    process.exit(1);
+    console.error('Error in Google Analytics Integration Test:', error);
   }
 }
 
-testGAConnection();
-
+testGAIntegration();
