@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertCircle } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import Image from 'next/image'
+import { Skeleton } from "@/components/ui/skeleton"
 
 interface AnalyticsData {
   visitors: number;
@@ -18,30 +19,34 @@ interface AnalyticsData {
 
 export function CleanSlateDashboard() {
   const { data: session, status } = useSession()
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
-    visitors: 0,
-    pageViews: 0,
-    bounceRate: 0,
-    leadsGenerated: 0
-  })
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function fetchAnalyticsData() {
-      try {
-        const response = await fetch('/api/analytics')
-        if (!response.ok) {
-          throw new Error('Failed to fetch analytics data')
+      if (session?.user?.websiteUrl) {
+        setIsLoading(true)
+        setError(null)
+        console.log('Fetching analytics for:', session.user.websiteUrl)
+        try {
+          const response = await fetch(`/api/analytics/${encodeURIComponent(session.user.websiteUrl)}`)
+          if (!response.ok) {
+            throw new Error('Failed to fetch analytics data')
+          }
+          const data = await response.json()
+          console.log('Received analytics data:', data)
+          setAnalyticsData(data)
+        } catch (error) {
+          console.error("Error fetching analytics data:", error)
+          setError("Failed to fetch analytics data. Please check your configuration and try again.")
+        } finally {
+          setIsLoading(false)
         }
-        const data = await response.json()
-        setAnalyticsData(data)
-      } catch (error) {
-        setError("Failed to fetch analytics data. Please check your configuration and try again.")
-        console.error("Error fetching analytics data:", error)
       }
     }
     fetchAnalyticsData()
-  }, [])
+  }, [session])
 
   if (status === "loading") {
     return <div className="flex items-center justify-center h-screen">Loading...</div>
@@ -99,14 +104,24 @@ export function CleanSlateDashboard() {
           <CardContent className="pt-6">
             <dl className="space-y-4">
               {[
-                { label: "Website Visitors", value: analyticsData.visitors.toLocaleString() },
-                { label: "Page Views", value: analyticsData.pageViews.toLocaleString() },
-                { label: "Bounce Rate", value: `${(analyticsData.bounceRate * 100).toFixed(2)}%` },
-                { label: "Leads Generated", value: analyticsData.leadsGenerated.toLocaleString() },
+                { label: "Website Visitors", value: analyticsData?.visitors },
+                { label: "Page Views", value: analyticsData?.pageViews },
+                { label: "Bounce Rate", value: analyticsData?.bounceRate, isPercentage: true },
+                { label: "Leads Generated", value: analyticsData?.leadsGenerated },
               ].map((item, index) => (
                 <div key={index} className="flex justify-between items-center border-b pb-2 last:border-b-0">
                   <dt className="font-medium text-gray-600 dark:text-gray-300">{item.label}:</dt>
-                  <dd className="font-bold text-blue-600 dark:text-blue-300">{item.value}</dd>
+                  <dd className="font-bold text-blue-600 dark:text-blue-300">
+                    {isLoading ? (
+                      <Skeleton className="h-6 w-20" />
+                    ) : (
+                      item.value !== undefined
+                        ? item.isPercentage
+                          ? `${(item.value * 100).toFixed(2)}%`
+                          : item.value.toLocaleString()
+                        : 'N/A'
+                    )}
+                  </dd>
                 </div>
               ))}
             </dl>
@@ -166,4 +181,3 @@ export function CleanSlateDashboard() {
     </div>
   )
 }
-
