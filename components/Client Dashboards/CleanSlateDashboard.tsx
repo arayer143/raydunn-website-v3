@@ -2,19 +2,23 @@
 
 import { useEffect, useState } from 'react'
 import { useSession } from "next-auth/react"
+import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ExternalLink } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertCircle } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import Image from 'next/image'
+import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
+import { AlertCircle, ExternalLink, Users, Eye, MousePointer, Clock, BarChart, UserPlus, DollarSign } from 'lucide-react'
+import Image from 'next/image'
 
 interface AnalyticsData {
   visitors: number;
   pageViews: number;
-  bounceRate: number;
-  leadsGenerated: number;
+  conversions: number;
+  avgSessionDuration: number;
+  engagementRate: number;
+  sessionsPerUser: number;
+  newUsers: number;
 }
 
 export function CleanSlateDashboard() {
@@ -28,14 +32,12 @@ export function CleanSlateDashboard() {
       if (session?.user?.websiteUrl) {
         setIsLoading(true)
         setError(null)
-        console.log('Fetching analytics for:', session.user.websiteUrl)
         try {
           const response = await fetch(`/api/analytics/${encodeURIComponent(session.user.websiteUrl)}`)
           if (!response.ok) {
             throw new Error('Failed to fetch analytics data')
           }
           const data = await response.json()
-          console.log('Received analytics data:', data)
           setAnalyticsData(data)
         } catch (error) {
           console.error("Error fetching analytics data:", error)
@@ -72,6 +74,16 @@ export function CleanSlateDashboard() {
     { date: "2023-11-15", amount: "$149.99", description: "Monthly website maintenance" }
   ]
 
+  const metricCards = [
+    { label: "Visitors", value: analyticsData?.visitors, icon: Users },
+    { label: "Page Views", value: analyticsData?.pageViews, icon: Eye },
+    { label: "Conversions", value: analyticsData?.conversions, icon: MousePointer },
+    { label: "Avg. Session Duration", value: analyticsData?.avgSessionDuration, icon: Clock, format: (value: number) => `${(value / 60).toFixed(2)} min` },
+    { label: "Engagement Rate", value: analyticsData?.engagementRate, icon: BarChart, format: (value: number) => `${(value * 100).toFixed(2)}%` },
+    { label: "Sessions per User", value: analyticsData?.sessionsPerUser, icon: Users },
+    { label: "New Users", value: analyticsData?.newUsers, icon: UserPlus },
+  ]
+
   return (
     <div className="container mx-auto py-10 px-4 sm:px-6 lg:px-8">
       <div className="flex justify-between items-center mb-8">
@@ -95,40 +107,47 @@ export function CleanSlateDashboard() {
         </Alert>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="shadow-lg">
-          <CardHeader className="bg-blue-50 dark:bg-blue-900">
-            <CardTitle className="text-blue-700 dark:text-blue-100">Website Performance</CardTitle>
-            <CardDescription>Last 7 days</CardDescription>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <dl className="space-y-4">
-              {[
-                { label: "Website Visitors", value: analyticsData?.visitors },
-                { label: "Page Views", value: analyticsData?.pageViews },
-                { label: "Bounce Rate", value: analyticsData?.bounceRate, isPercentage: true },
-                { label: "Leads Generated", value: analyticsData?.leadsGenerated },
-              ].map((item, index) => (
-                <div key={index} className="flex justify-between items-center border-b pb-2 last:border-b-0">
-                  <dt className="font-medium text-gray-600 dark:text-gray-300">{item.label}:</dt>
-                  <dd className="font-bold text-blue-600 dark:text-blue-300">
-                    {isLoading ? (
-                      <Skeleton className="h-6 w-20" />
-                    ) : (
-                      item.value !== undefined
-                        ? item.isPercentage
-                          ? `${(item.value * 100).toFixed(2)}%`
-                          : item.value.toLocaleString()
-                        : 'N/A'
-                    )}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </CardContent>
-        </Card>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-8">
+        {metricCards.map((metric, index) => (
+          <motion.div
+            key={metric.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+          >
+            <Card className="shadow-lg">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{metric.label}</CardTitle>
+                <metric.icon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <Skeleton className="h-8 w-[100px]" />
+                ) : (
+                  <div className="text-2xl font-bold">
+                    {metric.format 
+                      ? metric.format(metric.value as number) 
+                      : metric.value?.toLocaleString() ?? 'N/A'}
+                  </div>
+                )}
+                {!isLoading && metric.value !== undefined && (
+                  <Progress 
+                    value={((metric.value as number) / (Math.max(metric.value as number, 100))) * 100} 
+                    className="mt-2"
+                  />
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
 
-        <Card className="shadow-lg">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.8 }}
+      >
+        <Card className="shadow-lg mb-8">
           <CardHeader className="bg-purple-50 dark:bg-purple-900">
             <CardTitle className="text-purple-700 dark:text-purple-100">Website Maintenance</CardTitle>
             <CardDescription>Subscription details</CardDescription>
@@ -136,48 +155,51 @@ export function CleanSlateDashboard() {
           <CardContent className="pt-6">
             <dl className="space-y-4">
               {[
-                { label: "Last Payment", value: paymentData.lastPayment },
-                { label: "Amount", value: paymentData.amount },
-                { label: "Next Due", value: paymentData.nextDue },
+                { label: "Last Payment", value: paymentData.lastPayment, icon: DollarSign },
+                { label: "Amount", value: paymentData.amount, icon: DollarSign },
+                { label: "Next Due", value: paymentData.nextDue, icon: DollarSign },
               ].map((item, index) => (
-                <div key={index} className="flex justify-between border-b pb-2 last:border-b-0">
-                  <dt className="font-medium text-gray-600 dark:text-gray-300">{item.label}:</dt>
+                <div key={index} className="flex justify-between items-center border-b pb-2 last:border-b-0">
+                  <dt className="font-medium text-gray-600 dark:text-gray-300 flex items-center">
+                    <item.icon className="h-4 w-4 mr-2" />
+                    {item.label}:
+                  </dt>
                   <dd className="font-bold text-purple-600 dark:text-purple-300">{item.value}</dd>
                 </div>
               ))}
             </dl>
           </CardContent>
         </Card>
-      </div>
 
-      <Card className="mt-8 shadow-lg">
-        <CardHeader className="bg-gray-50 dark:bg-gray-800">
-          <CardTitle className="text-gray-700 dark:text-gray-100">Payment History</CardTitle>
-          <CardDescription>Past website maintenance payments</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="relative overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs uppercase bg-gray-100 dark:bg-gray-700">
-                <tr>
-                  <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300">Date</th>
-                  <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300">Description</th>
-                  <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300 text-right">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pastPayments.map((payment, index) => (
-                  <tr key={index} className="border-b dark:border-gray-700">
-                    <td className="px-6 py-4">{payment.date}</td>
-                    <td className="px-6 py-4">{payment.description}</td>
-                    <td className="px-6 py-4 text-right font-medium text-gray-900 dark:text-gray-100">{payment.amount}</td>
+        <Card className="shadow-lg">
+          <CardHeader className="bg-gray-50 dark:bg-gray-800">
+            <CardTitle className="text-gray-700 dark:text-gray-100">Payment History</CardTitle>
+            <CardDescription>Past website maintenance payments</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="relative overflow-x-auto">
+              <table className="w-full text-sm text-left">
+                <thead className="text-xs uppercase bg-gray-100 dark:bg-gray-700">
+                  <tr>
+                    <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300">Date</th>
+                    <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300">Description</th>
+                    <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300 text-right">Amount</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+                </thead>
+                <tbody>
+                  {pastPayments.map((payment, index) => (
+                    <tr key={index} className="border-b dark:border-gray-700">
+                      <td className="px-6 py-4">{payment.date}</td>
+                      <td className="px-6 py-4">{payment.description}</td>
+                      <td className="px-6 py-4 text-right font-medium text-gray-900 dark:text-gray-100">{payment.amount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   )
 }

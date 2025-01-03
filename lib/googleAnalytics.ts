@@ -6,6 +6,16 @@ interface ClientCredentials {
   propertyId: string;
 }
 
+interface AnalyticsData {
+  visitors: number;
+  pageViews: number;
+  conversions: number;
+  avgSessionDuration: number;
+  engagementRate: number;
+  sessionsPerUser: number;
+  newUsers: number;
+}
+
 const clientCredentials: Record<string, ClientCredentials> = {
   'https://www.cleanslatepressurewashingnola.com': {
     clientEmail: process.env.CLEANSLATE_GA_CLIENT_EMAIL || '',
@@ -15,7 +25,7 @@ const clientCredentials: Record<string, ClientCredentials> = {
   // Add other clients here as needed
 }
 
-export async function getAnalyticsData(websiteUrl: string) {
+export async function getAnalyticsData(websiteUrl: string): Promise<AnalyticsData> {
   console.log('[GA] Starting analytics data fetch for:', websiteUrl)
   
   try {
@@ -59,40 +69,33 @@ export async function getAnalyticsData(websiteUrl: string) {
       property: `properties/${credentials.propertyId}`,
       dateRanges: [
         {
-          startDate: '7daysAgo',
+          startDate: '30daysAgo',
           endDate: 'today',
         },
       ],
-      dimensions: [
-        {
-          name: 'date',
-        },
-      ],
       metrics: [
-        {
-          name: 'activeUsers',
-        },
-        {
-          name: 'screenPageViews',
-        },
-        {
-          name: 'bounceRate',
-        },
-        {
-          name: 'conversions',
-        },
+        { name: 'activeUsers' },
+        { name: 'screenPageViews' },
+        { name: 'conversions' },
+        { name: 'averageSessionDuration' },
+        { name: 'engagementRate' },
+        { name: 'sessionsPerUser' },
+        { name: 'newUsers' },
       ],
     })
 
     console.log('[GA] Report run successfully, processing data')
 
-    const latestMetrics = response.rows?.[response.rows.length - 1]?.metricValues ?? []
+    const latestMetrics = response.rows?.[0]?.metricValues ?? []
 
     return {
       visitors: Number(latestMetrics[0]?.value) || 0,
       pageViews: Number(latestMetrics[1]?.value) || 0,
-      bounceRate: Number(latestMetrics[2]?.value) || 0,
-      leadsGenerated: Number(latestMetrics[3]?.value) || 0,
+      conversions: Number(latestMetrics[2]?.value) || 0,
+      avgSessionDuration: Number(latestMetrics[3]?.value) || 0,
+      engagementRate: Number(latestMetrics[4]?.value) || 0,
+      sessionsPerUser: Number(latestMetrics[5]?.value) || 0,
+      newUsers: Number(latestMetrics[6]?.value) || 0,
     }
   } catch (error) {
     console.error('[GA] Error in getAnalyticsData:', {
