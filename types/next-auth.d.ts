@@ -1,21 +1,17 @@
-import NextAuth, { DefaultSession } from "next-auth"
+import { ClientInfo } from "@/lib/clientCodes"
 
 declare module "next-auth" {
-  interface Session extends DefaultSession {
-    user: {
-      id: string
-      username: string
-      websiteUrl: string
-      clientId: string
-      clientName: string
-    } & DefaultSession["user"]
-  }
-
   interface User {
+    id: string
     username: string
-    websiteUrl: string
+    clientCode: string
     clientId: string
     clientName: string
+    clientInfo: ClientInfo
+  }
+
+  interface Session {
+    user: User
   }
 }
 
@@ -23,11 +19,10 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: string
     username: string
-    websiteUrl: string
+    clientCode: string
     clientId: string
     clientName: string
+    clientInfo: ClientInfo
   }
 }
-
-
 

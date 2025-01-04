@@ -1,8 +1,9 @@
-import type { NextAuthOptions } from "next-auth"
+import { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
-import bcrypt from "bcrypt"
+import { compare } from "bcrypt"
+import { getClientByCode, ClientInfo } from "@/lib/clientCodes"
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -19,28 +20,37 @@ export const authOptions: NextAuthOptions = {
         }
 
         const user = await prisma.user.findUnique({
-          where: { username: credentials.username },
-          include: { client: true }
+          where: {
+            username: credentials.username
+          },
+          include: {
+            client: true
+          }
         })
 
         if (!user) {
           return null
         }
 
-        const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
+        const isPasswordValid = await compare(credentials.password, user.password)
 
         if (!isPasswordValid) {
           return null
         }
 
+        const clientInfo = getClientByCode(user.clientCode)
+
+        if (!clientInfo) {
+          throw new Error("Client information not found")
+        }
+
         return {
           id: user.id,
-          name: user.name,
-          email: user.email,
           username: user.username,
-          websiteUrl: user.websiteUrl,
+          clientCode: user.clientCode,
           clientId: user.clientId,
-          clientName: user.client.name
+          clientName: user.client.name,
+          clientInfo: clientInfo
         }
       }
     })
@@ -50,19 +60,21 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id
         token.username = user.username
-        token.websiteUrl = user.websiteUrl
+        token.clientCode = user.clientCode
         token.clientId = user.clientId
         token.clientName = user.clientName
+        token.clientInfo = user.clientInfo
       }
       return token
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string
+      if (token && session.user) {
+        session.user.id = token.id
         session.user.username = token.username as string
-        session.user.websiteUrl = token.websiteUrl as string
+        session.user.clientCode = token.clientCode as string
         session.user.clientId = token.clientId as string
         session.user.clientName = token.clientName as string
+        session.user.clientInfo = token.clientInfo as ClientInfo
       }
       return session
     }
@@ -74,3 +86,4 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
 }
+

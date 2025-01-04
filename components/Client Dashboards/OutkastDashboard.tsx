@@ -1,27 +1,57 @@
+"use client"
+
 import { useEffect, useState } from 'react'
-import { useSession } from "next-auth/react"
+import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Building2, Home, Droplets, Calendar } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Progress } from "@/components/ui/progress"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
+import { AlertCircle, ExternalLink, Users, Eye, MousePointer, Clock, BarChart, UserPlus, DollarSign } from 'lucide-react'
+import Image from 'next/image'
+import { ClientInfo } from "@/lib/clientCodes"
 
-export function OutkastDashboard() {
-  const { data: session } = useSession()
-  const analyticsData = {
-    visitors: 2145,
-    pageViews: 6789,
-    bounceRate: "35%",
-    leadsGenerated: 41
-  }
+interface AnalyticsData {
+  visitors: number;
+  pageViews: number;
+  conversions: number;
+  avgSessionDuration: number;
+  engagementRate: number;
+  sessionsPerUser: number;
+  newUsers: number;
+}
 
-  if (!session?.user) {
-    return <div>Loading...</div>
-  }
+interface OutkastDashboardProps {
+  clientInfo: ClientInfo;
+}
 
-  const serviceData = {
-    jobsCompleted: 423,
-    squareFootageCleaned: 750000,
-    residentialJobs: 267,
-    commercialJobs: 156
-  }
+export function OutkastDashboard({ clientInfo }: OutkastDashboardProps) {
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchAnalyticsData() {
+      if (clientInfo.code) {
+        setIsLoading(true)
+        setError(null)
+        try {
+          const response = await fetch(`/api/analytics/${encodeURIComponent(clientInfo.code)}`)
+          if (!response.ok) {
+            throw new Error('Failed to fetch analytics data')
+          }
+          const data = await response.json()
+          setAnalyticsData(data)
+        } catch (error) {
+          console.error("Error fetching analytics data:", error)
+          setError("Failed to fetch analytics data. Please check your configuration and try again.")
+        } finally {
+          setIsLoading(false)
+        }
+      }
+    }
+    fetchAnalyticsData()
+  }, [clientInfo.code])
 
   const paymentData = {
     lastPayment: "2024-01-20",
@@ -35,129 +65,132 @@ export function OutkastDashboard() {
     { date: "2023-11-20", amount: "$149.99", description: "Monthly website maintenance" }
   ]
 
+  const metricCards = [
+    { label: "Visitors", value: analyticsData?.visitors, icon: Users },
+    { label: "Page Views", value: analyticsData?.pageViews, icon: Eye },
+    { label: "Conversions", value: analyticsData?.conversions, icon: MousePointer },
+    { label: "Avg. Session Duration", value: analyticsData?.avgSessionDuration, icon: Clock, format: (value: number) => `${(value / 60).toFixed(2)} min` },
+    { label: "Engagement Rate", value: analyticsData?.engagementRate, icon: BarChart, format: (value: number) => `${(value * 100).toFixed(2)}%` },
+    { label: "Sessions per User", value: analyticsData?.sessionsPerUser, icon: Users },
+    { label: "New Users", value: analyticsData?.newUsers, icon: UserPlus },
+  ]
+
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-2xl font-bold mb-5">Welcome to Outkast Industrial Dashboard</h1>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle>Website Performance</CardTitle>
-            <CardDescription>Last 30 days</CardDescription>
+    <div className="container mx-auto py-10 px-4 sm:px-6 lg:px-8">
+      <div className="flex justify-between items-center mb-8">
+        <div className="flex items-center space-x-4">
+          <Image src="/outkast-industrial-logo.webp" alt="Outkast Industrial Logo" width={100} height={100} className="rounded-full" />
+          <h1 className="text-3xl font-bold">{clientInfo.name} Dashboard</h1>
+        </div>
+        <Button asChild variant="outline">
+          <a href={clientInfo.websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center">
+            Visit Website
+            <ExternalLink className="ml-2 h-4 w-4" />
+          </a>
+        </Button>
+      </div>
+
+      {error && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-8">
+        {metricCards.map((metric, index) => (
+          <motion.div
+            key={metric.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+          >
+            <Card className="shadow-lg">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">{metric.label}</CardTitle>
+                <metric.icon className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <Skeleton className="h-8 w-[100px]" />
+                ) : (
+                  <div className="text-2xl font-bold">
+                    {metric.format 
+                      ? metric.format(metric.value as number) 
+                      : metric.value?.toLocaleString() ?? 'N/A'}
+                  </div>
+                )}
+                {!isLoading && metric.value !== undefined && (
+                  <Progress 
+                    value={((metric.value as number) / (Math.max(metric.value as number, 100))) * 100} 
+                    className="mt-2"
+                  />
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.8 }}
+      >
+        <Card className="shadow-lg mb-8">
+          <CardHeader className="bg-purple-50 dark:bg-purple-900">
+            <CardTitle className="text-purple-700 dark:text-purple-100">Website Maintenance</CardTitle>
+            <CardDescription>Subscription details</CardDescription>
           </CardHeader>
-          <CardContent>
-            <dl className="space-y-2">
-              <div className="flex justify-between items-center">
-                <dt>Website Visitors:</dt>
-                <dd className="font-medium">{analyticsData.visitors}</dd>
-              </div>
-              <div className="flex justify-between items-center">
-                <dt>Page Views:</dt>
-                <dd className="font-medium">{analyticsData.pageViews}</dd>
-              </div>
-              <div className="flex justify-between items-center">
-                <dt>Bounce Rate:</dt>
-                <dd className="font-medium">{analyticsData.bounceRate}</dd>
-              </div>
-              <div className="flex justify-between items-center">
-                <dt>Leads Generated:</dt>
-                <dd className="font-medium">{analyticsData.leadsGenerated}</dd>
-              </div>
+          <CardContent className="pt-6">
+            <dl className="space-y-4">
+              {[
+                { label: "Last Payment", value: paymentData.lastPayment, icon: DollarSign },
+                { label: "Amount", value: paymentData.amount, icon: DollarSign },
+                { label: "Next Due", value: paymentData.nextDue, icon: DollarSign },
+              ].map((item, index) => (
+                <div key={index} className="flex justify-between items-center border-b pb-2 last:border-b-0">
+                  <dt className="font-medium text-gray-600 dark:text-gray-300 flex items-center">
+                    <item.icon className="h-4 w-4 mr-2" />
+                    {item.label}:
+                  </dt>
+                  <dd className="font-bold text-purple-600 dark:text-purple-300">{item.value}</dd>
+                </div>
+              ))}
             </dl>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Service Statistics</CardTitle>
-            <CardDescription>All time metrics</CardDescription>
+        <Card className="shadow-lg">
+          <CardHeader className="bg-gray-50 dark:bg-gray-800">
+            <CardTitle className="text-gray-700 dark:text-gray-100">Payment History</CardTitle>
+            <CardDescription>Past website maintenance payments</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Droplets className="h-4 w-4 text-blue-500" />
-                  <span className="text-sm font-medium">Jobs Completed</span>
-                </div>
-                <p className="text-2xl font-bold">{serviceData.jobsCompleted}</p>
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-green-500" />
-                  <span className="text-sm font-medium">Sq Ft Cleaned</span>
-                </div>
-                <p className="text-2xl font-bold">{serviceData.squareFootageCleaned.toLocaleString()}</p>
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Home className="h-4 w-4 text-orange-500" />
-                  <span className="text-sm font-medium">Residential</span>
-                </div>
-                <p className="text-2xl font-bold">{serviceData.residentialJobs}</p>
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-purple-500" />
-                  <span className="text-sm font-medium">Commercial</span>
-                </div>
-                <p className="text-2xl font-bold">{serviceData.commercialJobs}</p>
-              </div>
+            <div className="relative overflow-x-auto">
+              <table className="w-full text-sm text-left">
+                <thead className="text-xs uppercase bg-gray-100 dark:bg-gray-700">
+                  <tr>
+                    <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300">Date</th>
+                    <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300">Description</th>
+                    <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300 text-right">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pastPayments.map((payment, index) => (
+                    <tr key={index} className="border-b dark:border-gray-700">
+                      <td className="px-6 py-4">{payment.date}</td>
+                      <td className="px-6 py-4">{payment.description}</td>
+                      <td className="px-6 py-4 text-right font-medium text-gray-900 dark:text-gray-100">{payment.amount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </CardContent>
         </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Website Maintenance</CardTitle>
-            <CardDescription>Subscription details</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <dl className="space-y-2">
-              <div className="flex justify-between">
-                <dt>Last Payment:</dt>
-                <dd>{paymentData.lastPayment}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt>Amount:</dt>
-                <dd>{paymentData.amount}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt>Next Due:</dt>
-                <dd>{paymentData.nextDue}</dd>
-              </div>
-            </dl>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>Payment History</CardTitle>
-          <CardDescription>Past website maintenance payments</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="relative overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs uppercase bg-muted">
-                <tr>
-                  <th className="px-4 py-2">Date</th>
-                  <th className="px-4 py-2">Description</th>
-                  <th className="px-4 py-2 text-right">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pastPayments.map((payment, index) => (
-                  <tr key={index} className="border-b">
-                    <td className="px-4 py-2">{payment.date}</td>
-                    <td className="px-4 py-2">{payment.description}</td>
-                    <td className="px-4 py-2 text-right">{payment.amount}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </CardContent>
-      </Card>
+      </motion.div>
     </div>
   )
 }
-

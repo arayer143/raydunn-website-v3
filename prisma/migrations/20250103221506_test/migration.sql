@@ -1,15 +1,15 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "name" TEXT,
-    "email" TEXT NOT NULL,
     "username" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "websiteUrl" TEXT NOT NULL,
+    "name" TEXT,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "clientCode" TEXT NOT NULL,
     "clientId" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -19,7 +19,7 @@ CREATE TABLE "User" (
 CREATE TABLE "Client" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "websiteUrl" TEXT NOT NULL,
+    "clientCode" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -62,16 +62,16 @@ CREATE TABLE "VerificationToken" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE INDEX "User_clientId_idx" ON "User"("clientId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Client_websiteUrl_key" ON "Client"("websiteUrl");
+CREATE UNIQUE INDEX "Client_clientCode_key" ON "Client"("clientCode");
 
 -- CreateIndex
 CREATE INDEX "Account_userId_idx" ON "Account"("userId");

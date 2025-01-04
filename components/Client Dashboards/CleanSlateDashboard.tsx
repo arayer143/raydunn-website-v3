@@ -8,7 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
-import { AlertCircle, ExternalLink, Users, Eye, MousePointer, Clock, BarChart, UserPlus, DollarSign } from 'lucide-react'
+import { AlertCircle, Users, Eye, MousePointer, Clock, BarChart, UserPlus, DollarSign } from 'lucide-react'
 import Image from 'next/image'
 
 interface AnalyticsData {
@@ -21,7 +21,12 @@ interface AnalyticsData {
   newUsers: number;
 }
 
-export function CleanSlateDashboard() {
+interface ClientInfo {
+  name: string;
+  code: string;
+}
+
+export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) {
   const { data: session, status } = useSession()
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -29,11 +34,11 @@ export function CleanSlateDashboard() {
 
   useEffect(() => {
     async function fetchAnalyticsData() {
-      if (session?.user?.websiteUrl) {
+      if (clientInfo.code) {
         setIsLoading(true)
         setError(null)
         try {
-          const response = await fetch(`/api/analytics/${encodeURIComponent(session.user.websiteUrl)}`)
+          const response = await fetch(`/api/analytics/${encodeURIComponent(clientInfo.code)}`)
           if (!response.ok) {
             throw new Error('Failed to fetch analytics data')
           }
@@ -48,7 +53,7 @@ export function CleanSlateDashboard() {
       }
     }
     fetchAnalyticsData()
-  }, [session])
+  }, [clientInfo.code])
 
   if (status === "loading") {
     return <div className="flex items-center justify-center h-screen">Loading...</div>
@@ -91,12 +96,6 @@ export function CleanSlateDashboard() {
           <Image src="/cleanslatelol-whiteBG.webp" alt="Clean Slate Logo" width={100} height={100} className="rounded-full" />
           <h1 className="text-3xl font-bold">Clean Slate Pressure Washing Dashboard</h1>
         </div>
-        <Button asChild variant="outline">
-          <a href="https://cleanslatepressurewashingnola.com" target="_blank" rel="noopener noreferrer" className="flex items-center">
-            Visit Website
-            <ExternalLink className="ml-2 h-4 w-4" />
-          </a>
-        </Button>
       </div>
 
       {error && (
