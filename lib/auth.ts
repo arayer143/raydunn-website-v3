@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import { compare } from "bcrypt"
-import { getClientByCode, ClientInfo } from "@/lib/clientCodes"
+import { getClientCodes, ClientInfo } from "@/lib/clientCodes"
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -38,7 +38,8 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        const clientInfo = getClientByCode(user.clientCode)
+        const clientCodes = getClientCodes()
+        const clientInfo = clientCodes[user.clientCode]
 
         if (!clientInfo) {
           throw new Error("Client information not found")
@@ -69,7 +70,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (token && session.user) {
-        session.user.id = token.id
+        session.user.id = token.id as string
         session.user.username = token.username as string
         session.user.clientCode = token.clientCode as string
         session.user.clientId = token.clientId as string

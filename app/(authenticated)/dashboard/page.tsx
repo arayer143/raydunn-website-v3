@@ -4,7 +4,7 @@ import { authOptions } from "@/lib/auth"
 import { CleanSlateDashboard } from "@/components/Client Dashboards/CleanSlateDashboard"
 import { PristineCleanDashboard } from "@/components/Client Dashboards/PristineCleanDashboard"
 import { OutkastDashboard } from "@/components/Client Dashboards/OutkastDashboard"
-import { isValidClientCode, getClientByCode, ClientInfo } from "@/lib/clientCodes"
+import { getClientCodes, ClientInfo } from "@/lib/clientCodes"
 
 const dashboardComponents: { [key: string]: React.ComponentType<{ clientInfo: ClientInfo }> } = {
   "CSPW2024X": CleanSlateDashboard,
@@ -23,7 +23,9 @@ export default async function DashboardPage() {
   const clientCode = session.user.clientCode
   console.log("User client code:", clientCode)
 
-  if (!clientCode || !isValidClientCode(clientCode)) {
+  const clientCodes = getClientCodes()
+
+  if (!clientCode || !clientCodes[clientCode]) {
     console.log("Invalid client code:", clientCode)
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -35,7 +37,7 @@ export default async function DashboardPage() {
     )
   }
 
-  const clientInfo = getClientByCode(clientCode)
+  const clientInfo = clientCodes[clientCode]
 
   if (!clientInfo) {
     console.log("Client info not found for code:", clientCode)
@@ -69,3 +71,4 @@ export default async function DashboardPage() {
     </div>
   )
 }
+

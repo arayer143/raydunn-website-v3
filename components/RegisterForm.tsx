@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/hooks/use-toast"
-import { isValidClientCode, validCodes } from "@/lib/clientCodes"
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -28,11 +27,14 @@ const formSchema = z.object({
   password: z.string().min(8, {
     message: "Password must be at least 8 characters.",
   }),
-  clientCode: z.string().refine((code) => {
-    console.log("Validating client code in form schema:", code);
-    const isValid = isValidClientCode(code);
-    console.log("Client code validation result:", isValid);
-    return isValid;
+  clientCode: z.string().refine(async (code) => {
+    const response = await fetch('/api/validate-client-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clientCode: code }),
+    });
+    const data = await response.json();
+    return data.valid;
   }, {
     message: "Please enter a valid client code.",
   }),
@@ -41,10 +43,6 @@ const formSchema = z.object({
 export function RegisterForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    console.log("Valid client codes in RegisterForm:", validCodes);
-  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,38 +55,31 @@ export function RegisterForm() {
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("Form submitted with values:", values);
     setIsLoading(true)
     
     try {
-      console.log("Sending registration request to /api/register");
-      const response = await fetch('/api/register', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values),
       })
       
-      console.log("Received response from /api/register:", response);
       const data = await response.json()
-      console.log("Response data:", data);
       
       if (response.ok) {
-        console.log("Registration successful");
         toast({
           title: "Registration successful",
           description: "You can now log in to your account.",
         })
         router.push('/login')
       } else {
-        console.error("Registration failed:", data)
         toast({
           title: "Registration failed",
-          description: data.message || "An unexpected error occurred",
+          description: data.error || "An unexpected error occurred",
           variant: "destructive",
         })
       }
     } catch (error) {
-      console.error("Registration error:", error)
       toast({
         title: "An error occurred",
         description: "Please try again later.",
