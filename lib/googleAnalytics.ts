@@ -16,45 +16,25 @@ interface AnalyticsData {
   newUsers: number;
 }
 
-const clientCredentials: Record<string, ClientCredentials> = {
-  CSPW2024X: {
-    clientEmail: process.env.CLEANSLATE_GA_CLIENT_EMAIL || '',
-    privateKey: process.env.CLEANSLATE_GA_PRIVATE_KEY?.replace(/\\n/g, '\n') || '',
-    propertyId: process.env.CLEANSLATE_GA_PROPERTY_ID || '',
-  },
-  // Add other client codes here as needed
+const getClientCredentials = (clientCode: string): ClientCredentials => {
+  const clientEmail = process.env[`${clientCode}_GA_CLIENT_EMAIL`];
+  const privateKey = process.env[`${clientCode}_GA_PRIVATE_KEY`];
+  const propertyId = process.env[`${clientCode}_GA_PROPERTY_ID`];
+
+  if (!clientEmail || !privateKey || !propertyId) {
+    throw new Error(`Incomplete credentials for client code: ${clientCode}`);
+  }
+
+  return {
+    clientEmail,
+    privateKey: privateKey.replace(/\\n/g, '\n'),
+    propertyId,
+  };
 };
 
 export async function getAnalyticsData(clientCode: string): Promise<AnalyticsData> {
-  console.log('[GA] Starting analytics data fetch for:', clientCode);
-  
   try {
-    const credentials = clientCredentials[clientCode];
-
-    if (!credentials) {
-      throw new Error(`No credentials found for client code: ${clientCode}`);
-    }
-
-    console.log('[GA] Credentials check:', {
-      hasClientEmail: !!credentials.clientEmail,
-      hasPrivateKey: !!credentials.privateKey,
-      hasPropertyId: !!credentials.propertyId
-    });
-
-    if (!credentials.clientEmail || !credentials.privateKey || !credentials.propertyId) {
-      console.log('[GA] Credentials check:', {
-        hasClientEmail: !!credentials.clientEmail,
-        hasPrivateKey: !!credentials.privateKey,
-        hasPropertyId: !!credentials.propertyId
-      });
-      throw new Error(`Incomplete credentials for client code: ${clientCode}`);
-    }
-
-    console.log('[GA] Credentials found:', {
-      clientEmail: credentials.clientEmail,
-      privateKeyLength: credentials.privateKey.length,
-      propertyId: credentials.propertyId
-    });
+    const credentials = getClientCredentials(clientCode);
 
     const analyticsDataClient = new BetaAnalyticsDataClient({
       credentials: {
@@ -62,8 +42,6 @@ export async function getAnalyticsData(clientCode: string): Promise<AnalyticsDat
         private_key: credentials.privateKey,
       },
     });
-
-    console.log('[GA] Analytics client created, attempting to run report');
 
     const [response] = await analyticsDataClient.runReport({
       property: `properties/${credentials.propertyId}`,
@@ -84,8 +62,6 @@ export async function getAnalyticsData(clientCode: string): Promise<AnalyticsDat
       ],
     });
 
-    console.log('[GA] Report run successfully, processing data');
-
     const latestMetrics = response.rows?.[0]?.metricValues ?? [];
 
     return {
@@ -98,11 +74,7 @@ export async function getAnalyticsData(clientCode: string): Promise<AnalyticsDat
       newUsers: Number(latestMetrics[6]?.value) || 0,
     };
   } catch (error) {
-    console.error('[GA] Error in getAnalyticsData:', {
-      name: error instanceof Error ? error.name : 'Unknown',
-      message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined
-    });
+    console.error('Error fetching Google Analytics data:', error);
     throw error;
   }
 }
