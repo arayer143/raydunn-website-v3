@@ -6,8 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Button } from "@/components/ui/button"
-import { AlertCircle, ExternalLink, Users, Eye, MousePointer, Clock, BarChart, UserPlus, DollarSign } from 'lucide-react'
+import { AlertCircle, Users, Eye, MousePointer, Clock, BarChart, UserPlus, DollarSign } from 'lucide-react'
 import Image from 'next/image'
 import { ClientInfo } from "@/lib/clientCodes"
 
@@ -82,12 +81,6 @@ export function OutkastDashboard({ clientInfo }: OutkastDashboardProps) {
           <Image src="/outkast-industrial-logo.webp" alt="Outkast Industrial Logo" width={100} height={100} className="rounded-full" />
           <h1 className="text-3xl font-bold">{clientInfo.name} Dashboard</h1>
         </div>
-        <Button asChild variant="outline">
-          <a href={clientInfo.websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center">
-            Visit Website
-            <ExternalLink className="ml-2 h-4 w-4" />
-          </a>
-        </Button>
       </div>
 
       {error && (

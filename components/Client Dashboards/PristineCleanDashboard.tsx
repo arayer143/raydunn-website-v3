@@ -6,8 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Button } from "@/components/ui/button"
-import { AlertCircle, ExternalLink, Users, Eye, MousePointer, Clock, BarChart, UserPlus, DollarSign } from 'lucide-react'
+import { AlertCircle, Users, Eye, MousePointer, Clock, BarChart, UserPlus, DollarSign } from 'lucide-react'
 import Image from 'next/image'
 import { ClientInfo } from "@/lib/clientCodes"
 
@@ -53,7 +52,6 @@ export function PristineCleanDashboard({ clientInfo }: PristineCleanDashboardPro
     fetchAnalyticsData()
   }, [clientInfo.code])
 
-
   const paymentData = {
     lastPayment: "2024-01-10",
     amount: "$149.99",
@@ -83,12 +81,6 @@ export function PristineCleanDashboard({ clientInfo }: PristineCleanDashboardPro
           <Image src="/pristine-clean-logo.webp" alt="Pristine Clean Logo" width={100} height={100} className="rounded-full" />
           <h1 className="text-3xl font-bold">{clientInfo.name} Dashboard</h1>
         </div>
-        <Button asChild variant="outline">
-          <a href={clientInfo.websiteUrl} target="_blank" rel="noopener noreferrer" className="flex items-center">
-            Visit Website
-            <ExternalLink className="ml-2 h-4 w-4" />
-          </a>
-        </Button>
       </div>
 
       {error && (
@@ -139,7 +131,6 @@ export function PristineCleanDashboard({ clientInfo }: PristineCleanDashboardPro
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.8 }}
       >
-
         <Card className="shadow-lg mb-8">
           <CardHeader className="bg-purple-50 dark:bg-purple-900">
             <CardTitle className="text-purple-700 dark:text-purple-100">Website Maintenance</CardTitle>
@@ -196,4 +187,3 @@ export function PristineCleanDashboard({ clientInfo }: PristineCleanDashboardPro
     </div>
   )
 }
-
