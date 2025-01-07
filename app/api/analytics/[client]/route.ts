@@ -16,10 +16,10 @@ export async function GET(
 
   try {
     const analyticsData = await getAnalyticsData(clientCode)
-    console.log('[API Route] Analytics data retrieved successfully')
+    console.log('[API Route] Analytics data retrieved successfully:', analyticsData)
     return NextResponse.json(analyticsData)
   } catch (error: unknown) {
-    console.error('[API Route] Error details:', {
+    console.error('[API Route] Error fetching analytics data:', {
       name: error instanceof Error ? error.name : 'Unknown',
       message: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined

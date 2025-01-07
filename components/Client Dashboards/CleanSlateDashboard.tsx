@@ -7,6 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
 import { AlertCircle, Users, Eye, MousePointer, Clock, BarChart, UserPlus, DollarSign } from 'lucide-react'
 import Image from 'next/image'
 
@@ -29,12 +31,13 @@ interface Payment {
   date: string;
   amount: number;
   description: string;
+  status: string;
 }
 
 export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) {
   const { data: session, status } = useSession()
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
-  const [recentPayments, setRecentPayments] = useState<Payment[]>([])
+  const [payments, setPayments] = useState<Payment[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -48,13 +51,22 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
             fetch(`/api/analytics/${encodeURIComponent(clientInfo.code)}`),
             fetch(`/api/process-excel?clientCode=${encodeURIComponent(clientInfo.code)}`)
           ])
-          if (!analyticsResponse.ok || !paymentsResponse.ok) {
-            throw new Error('Failed to fetch data')
+          
+          if (!analyticsResponse.ok) {
+            throw new Error('Failed to fetch analytics data')
           }
+
           const analyticsData = await analyticsResponse.json()
-          const paymentsData = await paymentsResponse.json()
+          console.log('Fetched analytics data:', analyticsData)
           setAnalyticsData(analyticsData)
-          setRecentPayments(paymentsData.recentPayments || [])
+
+          if (paymentsResponse.ok) {
+            const paymentsData = await paymentsResponse.json()
+            console.log('Fetched payments data:', paymentsData)
+            setPayments(paymentsData.payments || [])
+          } else {
+            console.warn('Failed to fetch payment data, but continuing with analytics')
+          }
         } catch (error) {
           console.error("Error fetching data:", error)
           setError("Failed to fetch data. Please check your configuration and try again.")
@@ -155,8 +167,8 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
           <CardContent className="pt-6">
             <dl className="space-y-4">
               {[
-                { label: "Last Payment", value: recentPayments[0]?.date || 'N/A', icon: DollarSign },
-                { label: "Amount", value: recentPayments[0]?.amount !== undefined ? `$${recentPayments[0].amount.toFixed(2)}` : 'N/A', icon: DollarSign },
+                { label: "Last Payment", value: payments[0]?.date || 'N/A', icon: DollarSign },
+                { label: "Amount", value: payments[0]?.amount !== undefined ? `$${payments[0].amount.toFixed(2)}` : 'N/A', icon: DollarSign },
                 { label: "Next Due", value: 'Contact support for details', icon: DollarSign },
               ].map((item, index) => (
                 <div key={index} className="flex justify-between items-center border-b pb-2 last:border-b-0">
@@ -183,31 +195,35 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-full" />
               </div>
-            ) : recentPayments && recentPayments.length > 0 ? (
-              <div className="relative overflow-x-auto">
-                <table className="w-full text-sm text-left">
-                  <thead className="text-xs uppercase bg-gray-100 dark:bg-gray-700">
-                    <tr>
-                      <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300">Date</th>
-                      <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300">Description</th>
-                      <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300 text-right">Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recentPayments.map((payment, index) => (
-                      <tr key={index} className="border-b dark:border-gray-700">
-                        <td className="px-6 py-4">{payment.date || 'N/A'}</td>
-                        <td className="px-6 py-4">{payment.description || 'N/A'}</td>
-                        <td className="px-6 py-4 text-right font-medium text-gray-900 dark:text-gray-100">
-                          {payment.amount !== undefined ? `$${payment.amount.toFixed(2)}` : 'N/A'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            ) : payments && payments.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {payments.map((payment, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{payment.date}</TableCell>
+                      <TableCell>{payment.description}</TableCell>
+                      <TableCell>${payment.amount.toFixed(2)}</TableCell>
+                      <TableCell>
+                        {payment.status.toLowerCase() === 'paid' ? (
+                          <Badge variant="secondary" className="bg-green-500 hover:bg-green-600">Paid</Badge>
+                        ) : (
+                          payment.status
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             ) : (
-              <p className="text-gray-500 dark:text-gray-400">No recent payments found.</p>
+              <p className="text-gray-500 dark:text-gray-400">No payment history available.</p>
             )}
           </CardContent>
         </Card>

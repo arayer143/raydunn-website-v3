@@ -38,6 +38,7 @@ const getClientCredentials = (clientCode: string): ClientCredentials => {
 
 export async function getAnalyticsData(clientCode: string): Promise<AnalyticsData> {
   try {
+    console.log(`[Google Analytics] Fetching data for client: ${clientCode}`);
     const credentials = getClientCredentials(clientCode);
 
     const analyticsDataClient = new BetaAnalyticsDataClient({
@@ -68,7 +69,7 @@ export async function getAnalyticsData(clientCode: string): Promise<AnalyticsDat
 
     const latestMetrics = response.rows?.[0]?.metricValues ?? [];
 
-    return {
+    const analyticsData: AnalyticsData = {
       visitors: parseInt(latestMetrics[0]?.value ?? '0', 10),
       pageViews: parseInt(latestMetrics[1]?.value ?? '0', 10),
       conversions: parseInt(latestMetrics[2]?.value ?? '0', 10),
@@ -77,8 +78,12 @@ export async function getAnalyticsData(clientCode: string): Promise<AnalyticsDat
       sessionsPerUser: parseFloat(latestMetrics[5]?.value ?? '0'),
       newUsers: parseInt(latestMetrics[6]?.value ?? '0', 10),
     };
+
+    console.log(`[Google Analytics] Data fetched successfully for client: ${clientCode}`, analyticsData);
+    return analyticsData;
   } catch (error) {
-    console.error('Error fetching Google Analytics data:', error);
+    console.error(`[Google Analytics] Error fetching data for client ${clientCode}:`, error);
     throw new Error(`Failed to fetch analytics data for client ${clientCode}: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
+
