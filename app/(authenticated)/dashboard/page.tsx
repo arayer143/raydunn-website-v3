@@ -1,3 +1,5 @@
+
+
 import { getServerSession } from "next-auth/next"
 import { redirect } from "next/navigation"
 import { authOptions } from "@/lib/auth"
@@ -13,6 +15,7 @@ const dashboardComponents: { [key: string]: React.ComponentType<{ clientInfo: Cl
 }
 
 export default async function DashboardPage() {
+  console.log("Starting DashboardPage render")
   const session = await getServerSession(authOptions)
 
   if (!session || !session.user) {
@@ -20,10 +23,13 @@ export default async function DashboardPage() {
     redirect('/login')
   }
 
+  console.log("Session user:", JSON.stringify(session.user, null, 2))
+
   const clientCode = session.user.clientCode
   console.log("User client code:", clientCode)
 
   const clientCodes = getClientCodes()
+  console.log("Available client codes:", Object.keys(clientCodes))
 
   if (!clientCode || !clientCodes[clientCode]) {
     console.log("Invalid client code:", clientCode)
@@ -51,6 +57,8 @@ export default async function DashboardPage() {
     )
   }
 
+  console.log("Client info:", JSON.stringify(clientInfo, null, 2))
+
   const DashboardComponent = dashboardComponents[clientCode]
 
   if (!DashboardComponent) {
@@ -65,8 +73,9 @@ export default async function DashboardPage() {
     )
   }
 
+  console.log("Rendering dashboard for client:", clientCode)
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 p-6">
       <DashboardComponent clientInfo={clientInfo} />
     </div>
   )

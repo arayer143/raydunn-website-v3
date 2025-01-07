@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Button } from "@/components/ui/button"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
 import { AlertCircle, Users, Eye, MousePointer, Clock, BarChart, UserPlus, DollarSign } from 'lucide-react'
 import Image from 'next/image'
 
@@ -26,33 +27,55 @@ interface ClientInfo {
   code: string;
 }
 
+interface Payment {
+  date: string;
+  amount: number;
+  description: string;
+  status: string;
+}
+
 export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) {
   const { data: session, status } = useSession()
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
+  const [payments, setPayments] = useState<Payment[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    async function fetchAnalyticsData() {
+    async function fetchData() {
       if (clientInfo.code) {
         setIsLoading(true)
         setError(null)
         try {
-          const response = await fetch(`/api/analytics/${encodeURIComponent(clientInfo.code)}`)
-          if (!response.ok) {
+          const [analyticsResponse, paymentsResponse] = await Promise.all([
+            fetch(`/api/analytics/${encodeURIComponent(clientInfo.code)}`),
+            fetch(`/api/process-excel?clientCode=${encodeURIComponent(clientInfo.code)}`)
+          ])
+          
+          if (!analyticsResponse.ok) {
             throw new Error('Failed to fetch analytics data')
           }
-          const data = await response.json()
-          setAnalyticsData(data)
+
+          const analyticsData = await analyticsResponse.json()
+          console.log('Fetched analytics data:', analyticsData)
+          setAnalyticsData(analyticsData)
+
+          if (paymentsResponse.ok) {
+            const paymentsData = await paymentsResponse.json()
+            console.log('Fetched payments data:', paymentsData)
+            setPayments(paymentsData.payments || [])
+          } else {
+            console.warn('Failed to fetch payment data, but continuing with analytics')
+          }
         } catch (error) {
-          console.error("Error fetching analytics data:", error)
-          setError("Failed to fetch analytics data. Please check your configuration and try again.")
+          console.error("Error fetching data:", error)
+          setError("Failed to fetch data. Please check your configuration and try again.")
         } finally {
           setIsLoading(false)
         }
       }
     }
-    fetchAnalyticsData()
+    fetchData()
   }, [clientInfo.code])
 
   if (status === "loading") {
@@ -66,18 +89,6 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
   if (!session?.user) {
     return <div className="flex items-center justify-center h-screen">No user data available</div>
   }
-
-  const paymentData = {
-    lastPayment: "2024-01-15",
-    amount: "$149.99",
-    nextDue: "2024-02-15"
-  }
-
-  const pastPayments = [
-    { date: "2024-01-15", amount: "$149.99", description: "Monthly website maintenance" },
-    { date: "2023-12-15", amount: "$149.99", description: "Monthly website maintenance" },
-    { date: "2023-11-15", amount: "$149.99", description: "Monthly website maintenance" }
-  ]
 
   const metricCards = [
     { label: "Visitors", value: analyticsData?.visitors, icon: Users },
@@ -124,12 +135,14 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
                   <Skeleton className="h-8 w-[100px]" />
                 ) : (
                   <div className="text-2xl font-bold">
-                    {metric.format 
-                      ? metric.format(metric.value as number) 
-                      : metric.value?.toLocaleString() ?? 'N/A'}
+                    {metric.value !== undefined && metric.value !== null
+                      ? (metric.format 
+                          ? metric.format(metric.value as number) 
+                          : metric.value.toLocaleString())
+                      : 'N/A'}
                   </div>
                 )}
-                {!isLoading && metric.value !== undefined && (
+                {!isLoading && metric.value !== undefined && metric.value !== null && (
                   <Progress 
                     value={((metric.value as number) / (Math.max(metric.value as number, 100))) * 100} 
                     className="mt-2"
@@ -154,9 +167,9 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
           <CardContent className="pt-6">
             <dl className="space-y-4">
               {[
-                { label: "Last Payment", value: paymentData.lastPayment, icon: DollarSign },
-                { label: "Amount", value: paymentData.amount, icon: DollarSign },
-                { label: "Next Due", value: paymentData.nextDue, icon: DollarSign },
+                { label: "Last Payment", value: payments[0]?.date || 'N/A', icon: DollarSign },
+                { label: "Amount", value: payments[0]?.amount !== undefined ? `$${payments[0].amount.toFixed(2)}` : 'N/A', icon: DollarSign },
+                { label: "Next Due", value: 'Contact support for details', icon: DollarSign },
               ].map((item, index) => (
                 <div key={index} className="flex justify-between items-center border-b pb-2 last:border-b-0">
                   <dt className="font-medium text-gray-600 dark:text-gray-300 flex items-center">
@@ -173,29 +186,45 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
         <Card className="shadow-lg">
           <CardHeader className="bg-gray-50 dark:bg-gray-800">
             <CardTitle className="text-gray-700 dark:text-gray-100">Payment History</CardTitle>
-            <CardDescription>Past website maintenance payments</CardDescription>
+            <CardDescription>Recent website maintenance payments</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="relative overflow-x-auto">
-              <table className="w-full text-sm text-left">
-                <thead className="text-xs uppercase bg-gray-100 dark:bg-gray-700">
-                  <tr>
-                    <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300">Date</th>
-                    <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300">Description</th>
-                    <th className="px-6 py-3 font-medium text-gray-600 dark:text-gray-300 text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pastPayments.map((payment, index) => (
-                    <tr key={index} className="border-b dark:border-gray-700">
-                      <td className="px-6 py-4">{payment.date}</td>
-                      <td className="px-6 py-4">{payment.description}</td>
-                      <td className="px-6 py-4 text-right font-medium text-gray-900 dark:text-gray-100">{payment.amount}</td>
-                    </tr>
+            {isLoading ? (
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+              </div>
+            ) : payments && payments.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Description</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {payments.map((payment, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{payment.date}</TableCell>
+                      <TableCell>{payment.description}</TableCell>
+                      <TableCell>${payment.amount.toFixed(2)}</TableCell>
+                      <TableCell>
+                        {payment.status.toLowerCase() === 'paid' ? (
+                          <Badge variant="secondary" className="bg-green-500 hover:bg-green-600">Paid</Badge>
+                        ) : (
+                          payment.status
+                        )}
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
-            </div>
+                </TableBody>
+              </Table>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400">No payment history available.</p>
+            )}
           </CardContent>
         </Card>
       </motion.div>
