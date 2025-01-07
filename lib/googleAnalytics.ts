@@ -22,6 +22,10 @@ const getClientCredentials = (clientCode: string): ClientCredentials => {
   const propertyId = process.env[`${clientCode}_GA_PROPERTY_ID`];
 
   if (!clientEmail || !privateKey || !propertyId) {
+    console.error(`Missing credentials for client code: ${clientCode}`);
+    console.error(`Client Email: ${clientEmail ? 'Set' : 'Missing'}`);
+    console.error(`Private Key: ${privateKey ? 'Set' : 'Missing'}`);
+    console.error(`Property ID: ${propertyId ? 'Set' : 'Missing'}`);
     throw new Error(`Incomplete credentials for client code: ${clientCode}`);
   }
 
@@ -65,16 +69,16 @@ export async function getAnalyticsData(clientCode: string): Promise<AnalyticsDat
     const latestMetrics = response.rows?.[0]?.metricValues ?? [];
 
     return {
-      visitors: Number(latestMetrics[0]?.value) || 0,
-      pageViews: Number(latestMetrics[1]?.value) || 0,
-      conversions: Number(latestMetrics[2]?.value) || 0,
-      avgSessionDuration: Number(latestMetrics[3]?.value) || 0,
-      engagementRate: Number(latestMetrics[4]?.value) || 0,
-      sessionsPerUser: Number(latestMetrics[5]?.value) || 0,
-      newUsers: Number(latestMetrics[6]?.value) || 0,
+      visitors: parseInt(latestMetrics[0]?.value ?? '0', 10),
+      pageViews: parseInt(latestMetrics[1]?.value ?? '0', 10),
+      conversions: parseInt(latestMetrics[2]?.value ?? '0', 10),
+      avgSessionDuration: parseFloat(latestMetrics[3]?.value ?? '0'),
+      engagementRate: parseFloat(latestMetrics[4]?.value ?? '0'),
+      sessionsPerUser: parseFloat(latestMetrics[5]?.value ?? '0'),
+      newUsers: parseInt(latestMetrics[6]?.value ?? '0', 10),
     };
   } catch (error) {
     console.error('Error fetching Google Analytics data:', error);
-    throw error;
+    throw new Error(`Failed to fetch analytics data for client ${clientCode}: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }

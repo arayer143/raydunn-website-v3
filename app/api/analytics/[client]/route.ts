@@ -1,21 +1,24 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getAnalyticsData } from '@/lib/googleAnalytics'
-import { logEnvironmentVariables } from '@/lib/debugEnv';
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { client: string } }
 ) {
-  logEnvironmentVariables();
-  const clientWebsiteUrl = params.client
+  const clientCode = params.client.toUpperCase();
 
-  console.log(`[API Route] Fetching analytics for: ${clientWebsiteUrl}`)
+  console.log(`[API Route] Fetching analytics for client: ${clientCode}`);
+  console.log(`[API Route] Environment variables:`, {
+    clientEmail: process.env[`${clientCode}_GA_CLIENT_EMAIL`] ? 'Set' : 'Missing',
+    privateKey: process.env[`${clientCode}_GA_PRIVATE_KEY`] ? 'Set' : 'Missing',
+    propertyId: process.env[`${clientCode}_GA_PROPERTY_ID`] ? 'Set' : 'Missing',
+  });
 
   try {
-    const analyticsData = await getAnalyticsData(clientWebsiteUrl)
-    console.log('[API Route] Analytics data retrieved successfully:', analyticsData)
+    const analyticsData = await getAnalyticsData(clientCode)
+    console.log('[API Route] Analytics data retrieved successfully')
     return NextResponse.json(analyticsData)
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('[API Route] Error details:', {
       name: error instanceof Error ? error.name : 'Unknown',
       message: error instanceof Error ? error.message : 'Unknown error',
@@ -28,4 +31,5 @@ export async function GET(
     }, { status: 500 })
   }
 }
+
 
