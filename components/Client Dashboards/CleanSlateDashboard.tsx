@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { AlertCircle, Users, Eye, MousePointer, Clock, BarChart, UserPlus, Home, Phone, Mail, MessageSquare } from 'lucide-react'
+import { AlertCircle, Users, Eye, MousePointer, Clock, BarChart, UserPlus, Home, Phone, Mail, MessageSquare, CheckCircle, XCircle } from 'lucide-react'
 import Image from 'next/image'
 
 interface AnalyticsData {
@@ -44,17 +44,50 @@ function PaymentStatusCheck({ payments }: { payments: Payment[] }) {
   const mostRecentPayment = sortedPayments[0];
   const mostRecentPaymentDate = parseISO(mostRecentPayment.date);
   const isCurrentMonth = isThisMonth(mostRecentPaymentDate);
+  const isPaid = mostRecentPayment.status.toLowerCase() === 'paid';
 
   return (
-    <Alert variant={isCurrentMonth ? "default" : "destructive"} className="mb-6">
-      <AlertCircle className="h-4 w-4" />
-      <AlertTitle>Payment Status</AlertTitle>
-      <AlertDescription>
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={`mb-6 p-4 rounded-lg shadow-lg ${
+        isPaid ? 'bg-green-100 dark:bg-green-800' : 'bg-red-100 dark:bg-red-800'
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          {isPaid ? (
+            <CheckCircle className="h-6 w-6 text-green-500 dark:text-green-300" />
+          ) : (
+            <XCircle className="h-6 w-6 text-red-500 dark:text-red-300" />
+          )}
+          <h3 className={`text-lg font-semibold ${
+            isPaid ? 'text-green-700 dark:text-green-200' : 'text-red-700 dark:text-red-200'
+          }`}>
+            Payment Status
+          </h3>
+        </div>
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2, type: 'spring', stiffness: 500, damping: 15 }}
+        >
+          <Badge className={`text-sm ${
+            isPaid ? 'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100' : 'bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-100'
+          }`}>
+            {isPaid ? 'Paid' : 'Unpaid'}
+          </Badge>
+        </motion.div>
+      </div>
+      <p className={`mt-2 ${
+        isPaid ? 'text-green-600 dark:text-green-200' : 'text-red-600 dark:text-red-200'
+      }`}>
         {isCurrentMonth
           ? `Your most recent payment was on ${format(mostRecentPaymentDate, 'MMMM d, yyyy')}. You're up to date!`
           : `Your last payment was on ${format(mostRecentPaymentDate, 'MMMM d, yyyy')}. A new payment may be due this month.`}
-      </AlertDescription>
-    </Alert>
+      </p>
+    </motion.div>
   );
 }
 
@@ -220,33 +253,38 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
                     <div className="overflow-x-auto">
                       <Table>
                         <TableHeader>
-                          <TableRow>
-                            <TableHead className="w-[100px]">Date</TableHead>
-                            <TableHead>Description</TableHead>
-                            <TableHead className="text-right">Amount</TableHead>
-                            <TableHead className="text-center">Status</TableHead>
+                          <TableRow className="bg-gray-100 dark:bg-gray-700">
+                            <TableHead className="w-[100px] font-bold">Date</TableHead>
+                            <TableHead className="font-bold">Description</TableHead>
+                            <TableHead className="text-right font-bold">Amount</TableHead>
+                            <TableHead className="text-center font-bold">Status</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {payments.map((payment, index) => (
-                            <motion.tr
-                              key={index}
-                              initial={{ opacity: 0, x: -20 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ duration: 0.3, delay: index * 0.1 }}
-                            >
-                              <TableCell className="font-medium">{format(parseISO(payment.date), 'MMM d, yyyy')}</TableCell>
-                              <TableCell>{payment.description}</TableCell>
-                              <TableCell className="text-right">${payment.amount.toFixed(2)}</TableCell>
-                              <TableCell className="text-center">
-                                <Badge
-                                  className={payment.status.toLowerCase() === 'paid' ? 'bg-green-500 hover:bg-green-600' : ''}
-                                >
-                                  {payment.status}
-                                </Badge>
-                              </TableCell>
-                            </motion.tr>
-                          ))}
+                          {payments.map((payment, index) => {
+                            const paymentDate = parseISO(payment.date);
+                            const isPaid = payment.status.toLowerCase() === 'paid';
+                            return (
+                              <motion.tr
+                                key={index}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.3, delay: index * 0.1 }}
+                                className={index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-800' : 'bg-white dark:bg-gray-900'}
+                              >
+                                <TableCell className="font-medium">{format(paymentDate, 'MMM d, yyyy')}</TableCell>
+                                <TableCell>{payment.description}</TableCell>
+                                <TableCell className="text-right">${payment.amount.toFixed(2)}</TableCell>
+                                <TableCell className="text-center">
+                                  <Badge
+                                    className={isPaid ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' : 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'}
+                                  >
+                                    {isPaid ? 'Paid' : 'Unpaid'}
+                                  </Badge>
+                                </TableCell>
+                              </motion.tr>
+                            );
+                          })}
                         </TableBody>
                       </Table>
                     </div>
@@ -312,4 +350,3 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
     </div>
   )
 }
-
