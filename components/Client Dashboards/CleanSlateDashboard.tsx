@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useSession } from "next-auth/react"
 import Link from 'next/link'
 import { motion } from "framer-motion"
+import { format, isThisMonth, parseISO } from 'date-fns'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -33,6 +34,27 @@ interface Payment {
   amount: number;
   description: string;
   status: string;
+}
+
+function PaymentStatusCheck({ payments }: { payments: Payment[] }) {
+  if (payments.length === 0) return null;
+
+  const sortedPayments = [...payments].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const mostRecentPayment = sortedPayments[0];
+  const mostRecentPaymentDate = parseISO(mostRecentPayment.date);
+  const isCurrentMonth = isThisMonth(mostRecentPaymentDate);
+
+  return (
+    <Alert variant={isCurrentMonth ? "default" : "destructive"} className="mb-6">
+      <AlertCircle className="h-4 w-4" />
+      <AlertTitle>Payment Status</AlertTitle>
+      <AlertDescription>
+        {isCurrentMonth
+          ? `Your most recent payment was on ${format(mostRecentPaymentDate, 'MMMM d, yyyy')}. You're up to date!`
+          : `Your last payment was on ${format(mostRecentPaymentDate, 'MMMM d, yyyy')}. A new payment may be due this month.`}
+      </AlertDescription>
+    </Alert>
+  );
 }
 
 export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) {
@@ -192,37 +214,42 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
                     <Skeleton className="h-4 w-full" />
                   </div>
                 ) : payments && payments.length > 0 ? (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Date</TableHead>
-                        <TableHead>Description</TableHead>
-                        <TableHead>Amount</TableHead>
-                        <TableHead>Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {payments.map((payment, index) => (
-                        <motion.tr
-                          key={index}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.3, delay: index * 0.1 }}
-                        >
-                          <TableCell>{payment.date}</TableCell>
-                          <TableCell>{payment.description}</TableCell>
-                          <TableCell>${payment.amount.toFixed(2)}</TableCell>
-                          <TableCell>
-                            {payment.status.toLowerCase() === 'paid' ? (
-                              <Badge variant="secondary" className="bg-green-500 hover:bg-green-600">Paid</Badge>
-                            ) : (
-                              payment.status
-                            )}
-                          </TableCell>
-                        </motion.tr>
-                      ))}
-                    </TableBody>
-                  </Table>
+                  <>
+                    <PaymentStatusCheck payments={payments} />
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="w-[100px]">Date</TableHead>
+                            <TableHead>Description</TableHead>
+                            <TableHead className="text-right">Amount</TableHead>
+                            <TableHead className="text-center">Status</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {payments.map((payment, index) => (
+                            <motion.tr
+                              key={index}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.3, delay: index * 0.1 }}
+                            >
+                              <TableCell className="font-medium">{format(parseISO(payment.date), 'MMM d, yyyy')}</TableCell>
+                              <TableCell>{payment.description}</TableCell>
+                              <TableCell className="text-right">${payment.amount.toFixed(2)}</TableCell>
+                              <TableCell className="text-center">
+                                <Badge
+                                  variant={payment.status.toLowerCase() === 'paid' ? 'success' : 'default'}
+                                >
+                                  {payment.status}
+                                </Badge>
+                              </TableCell>
+                            </motion.tr>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </>
                 ) : (
                   <p className="text-gray-500 dark:text-gray-400">No payment history available.</p>
                 )}
@@ -274,4 +301,3 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
     </div>
   )
 }
-
