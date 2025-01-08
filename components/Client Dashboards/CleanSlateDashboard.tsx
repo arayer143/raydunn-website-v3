@@ -10,8 +10,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { AlertCircle, Users, Eye, MousePointer, Clock, BarChart, UserPlus, DollarSign, Home, Phone, Mail, MessageSquare } from 'lucide-react'
+import { AlertCircle, Users, Eye, MousePointer, Clock, BarChart, UserPlus, Home, Phone, Mail, MessageSquare } from 'lucide-react'
 import Image from 'next/image'
 
 interface AnalyticsData {
@@ -239,7 +240,7 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
                               <TableCell className="text-right">${payment.amount.toFixed(2)}</TableCell>
                               <TableCell className="text-center">
                                 <Badge
-                                  variant={payment.status.toLowerCase() === 'paid' ? 'success' : 'default'}
+                                  className={payment.status.toLowerCase() === 'paid' ? 'bg-green-500 hover:bg-green-600' : ''}
                                 >
                                   {payment.status}
                                 </Badge>
@@ -260,38 +261,48 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
           <section>
             <Card className="bg-white dark:bg-gray-800">
               <CardHeader>
-                <CardTitle className="text-xl font-bold">Contact Information</CardTitle>
-                <CardDescription>Get in touch with us for any questions or concerns</CardDescription>
+                <CardTitle className="text-xl font-bold text-center">Contact Information</CardTitle>
+                <CardDescription className="text-center">Get in touch with us for any questions or concerns</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
+                <div className="flex flex-col items-center space-y-6">
                   <motion.div
-                    className="flex items-center"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3 }}
+                    className="flex items-center justify-center w-full"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
                   >
-                    <Phone className="h-5 w-5 mr-2 text-gray-500" />
-                    <span>+1 (555) 123-4567</span>
+                    <MessageSquare className="h-6 w-6 mr-2 text-blue-500" />
+                    <span className="text-lg">Live chat available 9 AM - 5 PM EST</span>
                   </motion.div>
-                  <motion.div
-                    className="flex items-center"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: 0.1 }}
-                  >
-                    <Mail className="h-5 w-5 mr-2 text-gray-500" />
-                    <span>support@cleanslate.com</span>
-                  </motion.div>
-                  <motion.div
-                    className="flex items-center"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: 0.2 }}
-                  >
-                    <MessageSquare className="h-5 w-5 mr-2 text-gray-500" />
-                    <span>Live chat available 9 AM - 5 PM EST</span>
-                  </motion.div>
+                  <div className="flex flex-col sm:flex-row justify-center items-center gap-4 w-full">
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Button
+                        size="lg"
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white"
+                        onClick={() => window.location.href = 'tel:9858692356'}
+                      >
+                        <Phone className="h-5 w-5" />
+                        <span>Call Us</span>
+                      </Button>
+                    </motion.div>
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <Button
+                        size="lg"
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white"
+                        onClick={() => window.location.href = 'mailto:raydunntech@gmail.com'}
+                      >
+                        <Mail className="h-5 w-5" />
+                        <span>Email Us</span>
+                      </Button>
+                    </motion.div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -301,3 +312,4 @@ export function CleanSlateDashboard({ clientInfo }: { clientInfo: ClientInfo }) 
     </div>
   )
 }
+
