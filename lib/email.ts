@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 
 export async function sendContactFormEmail(name: string, email: string, message: string) {
   const mailOptions = {
-    from: process.env.SMTP_FROM,
+    from: 'contact@raydunnsolutions.com',
     to: process.env.CONTACT_FORM_TO_EMAIL,
     subject: 'New Contact Form Submission',
     text: `
