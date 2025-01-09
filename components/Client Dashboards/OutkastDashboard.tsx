@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useSession } from "next-auth/react"
 import Link from 'next/link'
 import { motion } from "framer-motion"
-import { format, isThisMonth, parseISO } from 'date-fns'
+import { format, parseISO, isSameMonth } from 'date-fns'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { AlertCircle, Users, Eye, MousePointer, Clock, BarChart, UserPlus, Home, Phone, Mail, MessageSquare, CheckCircle, XCircle } from 'lucide-react'
+import { AlertCircle, Users, Eye, MousePointer, Clock, BarChart, UserPlus, Home, Phone, Mail, MessageSquare, CheckCircle, XCircle, ExternalLink } from 'lucide-react'
 import Image from 'next/image'
 
 interface AnalyticsData {
@@ -37,14 +37,20 @@ interface Payment {
   status: string;
 }
 
-function PaymentStatusCheck({ payments }: { payments: Payment[] }) {
+interface PaymentStatusCheckProps {
+  payments: Payment[];
+  quickBooksInvoiceUrl: string;
+}
+
+function PaymentStatusCheck({ payments, quickBooksInvoiceUrl }: PaymentStatusCheckProps) {
   if (payments.length === 0) return null;
 
   const sortedPayments = [...payments].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   const mostRecentPayment = sortedPayments[0];
   const mostRecentPaymentDate = parseISO(mostRecentPayment.date);
-  const isCurrentMonth = isThisMonth(mostRecentPaymentDate);
-  const isPaid = mostRecentPayment.status.toLowerCase() === 'paid';
+  const today = new Date();
+  const isPaid = mostRecentPayment.status.toLowerCase() !== 'open';
+  const isUpToDate = isSameMonth(mostRecentPaymentDate, today) && isPaid;
 
   return (
     <motion.div
@@ -52,18 +58,18 @@ function PaymentStatusCheck({ payments }: { payments: Payment[] }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className={`mb-6 p-4 rounded-lg shadow-lg ${
-        isPaid ? 'bg-green-100 dark:bg-green-800' : 'bg-red-100 dark:bg-red-800'
+        isUpToDate ? 'bg-green-100 dark:bg-green-800' : 'bg-red-100 dark:bg-red-800'
       }`}
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
-          {isPaid ? (
+          {isUpToDate ? (
             <CheckCircle className="h-6 w-6 text-green-500 dark:text-green-300" />
           ) : (
             <XCircle className="h-6 w-6 text-red-500 dark:text-red-300" />
           )}
           <h3 className={`text-lg font-semibold ${
-            isPaid ? 'text-green-700 dark:text-green-200' : 'text-red-700 dark:text-red-200'
+            isUpToDate ? 'text-green-700 dark:text-green-200' : 'text-red-700 dark:text-red-200'
           }`}>
             Payment Status
           </h3>
@@ -74,29 +80,42 @@ function PaymentStatusCheck({ payments }: { payments: Payment[] }) {
           transition={{ delay: 0.2, type: 'spring', stiffness: 500, damping: 15 }}
         >
           <Badge className={`text-sm ${
-            isPaid ? 'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100' : 'bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-100'
+            isUpToDate ? 'bg-green-200 text-green-800 dark:bg-green-700 dark:text-green-100' : 'bg-red-200 text-red-800 dark:bg-red-700 dark:text-red-100'
           }`}>
-            {isPaid ? 'Paid' : 'Unpaid'}
+            {isUpToDate ? 'Up to Date' : 'Payment Due'}
           </Badge>
         </motion.div>
       </div>
       <p className={`mt-2 ${
-        isPaid ? 'text-green-600 dark:text-green-200' : 'text-red-600 dark:text-red-200'
+        isUpToDate ? 'text-green-600 dark:text-green-200' : 'text-red-600 dark:text-red-200'
       }`}>
-        {isCurrentMonth
+        {isUpToDate
           ? `Your most recent payment was on ${format(mostRecentPaymentDate, 'MMMM d, yyyy')}. You're up to date!`
-          : `Your last payment was on ${format(mostRecentPaymentDate, 'MMMM d, yyyy')}. A new payment may be due this month.`}
+          : `You have not paid as of ${format(today, 'MMMM d, yyyy')}. Please pay now.`}
       </p>
+      {!isUpToDate && (
+        <div className="mt-4">
+          <Link href={quickBooksInvoiceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            View Invoice in QuickBooks
+            <ExternalLink className="ml-2 -mr-1 h-4 w-4" />
+          </Link>
+        </div>
+      )}
     </motion.div>
   );
 }
 
-export function OutkastDashboard({ clientInfo }: { clientInfo: ClientInfo }) {
+interface OutkastDashboardProps {
+  clientInfo: ClientInfo;
+}
+
+export function OutkastDashboard({ clientInfo }: OutkastDashboardProps) {
   const { data: session, status } = useSession()
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
   const [payments, setPayments] = useState<Payment[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const quickBooksInvoiceUrl = "https://connect.intuit.com/portal/app/CommerceNetwork/view/your-outkast-specific-id"
 
   useEffect(() => {
     async function fetchData() {
@@ -249,7 +268,7 @@ export function OutkastDashboard({ clientInfo }: { clientInfo: ClientInfo }) {
                   </div>
                 ) : payments && payments.length > 0 ? (
                   <>
-                    <PaymentStatusCheck payments={payments} />
+                    <PaymentStatusCheck payments={payments} quickBooksInvoiceUrl={quickBooksInvoiceUrl} />
                     <div className="overflow-x-auto">
                       <Table>
                         <TableHeader>
@@ -263,7 +282,7 @@ export function OutkastDashboard({ clientInfo }: { clientInfo: ClientInfo }) {
                         <TableBody>
                           {payments.map((payment, index) => {
                             const paymentDate = parseISO(payment.date);
-                            const isPaid = payment.status.toLowerCase() === 'paid';
+                            const isPaid = payment.status.toLowerCase() !== 'open';
                             return (
                               <motion.tr
                                 key={index}
@@ -279,7 +298,7 @@ export function OutkastDashboard({ clientInfo }: { clientInfo: ClientInfo }) {
                                   <Badge
                                     className={isPaid ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' : 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'}
                                   >
-                                    {isPaid ? 'Paid' : 'Unpaid'}
+                                    {isPaid ? 'Paid' : 'Open'}
                                   </Badge>
                                 </TableCell>
                               </motion.tr>
@@ -350,3 +369,4 @@ export function OutkastDashboard({ clientInfo }: { clientInfo: ClientInfo }) {
     </div>
   )
 }
+
