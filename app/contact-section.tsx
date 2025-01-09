@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { useToast } from "@/components/ui/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast"
 import { Mail, User, MessageSquare, ArrowRight } from 'lucide-react'
 
 export default function ContactSection() {
@@ -18,12 +18,17 @@ export default function ContactSection() {
 
     try {
       const form = e.currentTarget
-      const response = await fetch('https://formspree.io/f/mrbggdlj', {
+      const formData = new FormData(form)
+      const response = await fetch('/api/contact', {
         method: 'POST',
-        body: new FormData(form),
+        body: JSON.stringify({
+          name: formData.get('name'),
+          email: formData.get('email'),
+          message: formData.get('message'),
+        }),
         headers: {
-          Accept: 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       })
 
       if (response.ok) {
@@ -33,12 +38,13 @@ export default function ContactSection() {
         })
         form.reset()
       } else {
-        throw new Error('Form submission failed')
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Form submission failed')
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to send message. Please try again later.",
+        description: error instanceof Error ? error.message : "Failed to send message. Please try again later.",
         variant: "destructive",
       })
     } finally {
@@ -122,3 +128,4 @@ export default function ContactSection() {
     </section>
   )
 }
+

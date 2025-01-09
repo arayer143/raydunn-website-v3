@@ -23,6 +23,7 @@ model User {
 
   accounts      Account[]
   sessions      Session[]
+  passwordResetTokens PasswordResetToken[]
 
   @@index([clientId])
 }
@@ -72,4 +73,15 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  token   String   @unique
+  expires DateTime
+  userId  String
+  email   String
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
