@@ -1,5 +1,3 @@
-
-
 import { getServerSession } from "next-auth/next"
 import { redirect } from "next/navigation"
 import { authOptions } from "@/lib/auth"
@@ -7,6 +5,8 @@ import { CleanSlateDashboard } from "@/components/Client Dashboards/CleanSlateDa
 import { PristineCleanDashboard } from "@/components/Client Dashboards/PristineCleanDashboard"
 import { OutkastDashboard } from "@/components/Client Dashboards/OutkastDashboard"
 import { getClientCodes, ClientInfo } from "@/lib/clientCodes"
+import { DashboardThemeWrapper } from "@/components/DashboardThemeWrapper"
+import Navbar from "@/components/Navbar"
 
 const dashboardComponents: { [key: string]: React.ComponentType<{ clientInfo: ClientInfo }> } = {
   "CSPW2024X": CleanSlateDashboard,
@@ -15,69 +15,67 @@ const dashboardComponents: { [key: string]: React.ComponentType<{ clientInfo: Cl
 }
 
 export default async function DashboardPage() {
-  console.log("Starting DashboardPage render")
   const session = await getServerSession(authOptions)
 
   if (!session || !session.user) {
-    console.log("No session or user found, redirecting to login")
     redirect('/login')
   }
 
-  console.log("Session user:", JSON.stringify(session.user, null, 2))
-
   const clientCode = session.user.clientCode
-  console.log("User client code:", clientCode)
-
   const clientCodes = getClientCodes()
-  console.log("Available client codes:", Object.keys(clientCodes))
 
   if (!clientCode || !clientCodes[clientCode]) {
-    console.log("Invalid client code:", clientCode)
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="p-8 bg-white shadow-lg rounded-lg">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Invalid Client Code</h1>
-          <p className="text-gray-700">The client code associated with your account is invalid. Please contact support for assistance.</p>
+      <>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+          <div className="p-8 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+            <h1 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Invalid Client Code</h1>
+            <p className="text-gray-700 dark:text-gray-300">The client code associated with your account is invalid. Please contact support for assistance.</p>
+          </div>
         </div>
-      </div>
+      </>
     )
   }
 
   const clientInfo = clientCodes[clientCode]
 
   if (!clientInfo) {
-    console.log("Client info not found for code:", clientCode)
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="p-8 bg-white shadow-lg rounded-lg">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Client Information Not Found</h1>
-          <p className="text-gray-700">We couldn't find the information associated with your client code. Please contact support for assistance.</p>
+      <>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+          <div className="p-8 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+            <h1 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Client Information Not Found</h1>
+            <p className="text-gray-700 dark:text-gray-300">We couldn't find the information associated with your client code. Please contact support for assistance.</p>
+          </div>
         </div>
-      </div>
+      </>
     )
   }
-
-  console.log("Client info:", JSON.stringify(clientInfo, null, 2))
 
   const DashboardComponent = dashboardComponents[clientCode]
 
   if (!DashboardComponent) {
-    console.log("Dashboard not configured for client code:", clientCode)
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="p-8 bg-white shadow-lg rounded-lg">
-          <h1 className="text-2xl font-bold text-yellow-600 mb-4">Dashboard Not Configured</h1>
-          <p className="text-gray-700">The dashboard for your client code is not yet configured. Please contact support for assistance.</p>
+      <>
+        <Navbar />
+        <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+          <div className="p-8 dark:bg-gray-800 shadow-lg rounded-lg">
+            <h1 className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 mb-4">Dashboard Not Configured</h1>
+            <p className="text-gray-700 dark:text-gray-300">The dashboard for your client code is not yet configured. Please contact support for assistance.</p>
+          </div>
         </div>
-      </div>
+      </>
     )
   }
 
-  console.log("Rendering dashboard for client:", clientCode)
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <DashboardComponent clientInfo={clientInfo} />
-    </div>
+    <>
+      <Navbar />
+      <DashboardThemeWrapper clientInfo={clientInfo}>
+        <DashboardComponent clientInfo={clientInfo} />
+      </DashboardThemeWrapper>
+    </>
   )
 }
-
